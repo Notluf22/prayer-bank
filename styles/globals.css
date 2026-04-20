@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #b5902a;
+  --gold-light: #e8d08a;
+  --gold-pale: #fdf8ee;
+  --parchment: #faf6ef;
+}
+
+body {
+  background-color: var(--parchment);
+  font-family: 'Lato', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Gold divider ornament */
+.ornament::before {
+  content: '✦  ✦  ✦';
+  display: block;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 8px;
+  opacity: 0.7;
+}
+
+/* Gold border card */
+.card-gold {
+  border: 1px solid rgba(181, 144, 42, 0.2);
+  background: #ffffff;
+}
+
+/* Subtle gold button */
+.btn-gold {
+  border: 1px solid var(--gold);
+  color: #2d1f3d;
+  background: transparent;
+  transition: background 0.15s;
+}
+.btn-gold:hover {
+  background: rgba(181, 144, 42, 0.08);
+}
