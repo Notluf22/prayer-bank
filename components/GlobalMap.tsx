@@ -74,10 +74,10 @@ export default function GlobalMap({ recentPrayers }: { recentPrayers: any[] }) {
     <div className="relative w-full aspect-[2/1] rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
       {/* The new cleaner map image */}
       <Image 
-        src="/clean_map.png"
+        src="/clean_map_wide.png"
         alt="Sacred World Map"
         fill
-        className="object-contain"
+        className="object-cover"
       />
       
       {/* Pulse points - made smaller and more subtle */}
