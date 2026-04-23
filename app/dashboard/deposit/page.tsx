@@ -44,8 +44,8 @@ export default function DepositPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Deposit a Prayer</h1>
-        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Offer your prayer to the treasury</p>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Share a Prayer</h1>
+        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Share the grace of a prayer you've completed</p>
       </div>
 
       <form onSubmit={handleDeposit} className="space-y-6">

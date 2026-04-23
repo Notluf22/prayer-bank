@@ -56,11 +56,11 @@ export default function WithdrawPage() {
 
     if (res.ok) {
       setCredits(c => c - drawnPrayer.credit_value)
-      alert("You have kept this prayer. It is now yours to fulfill!")
+      alert("This prayer has been received. May the grace of this intention be with you!")
       setDrawnPrayer(null) // Reset to draw again
     } else {
       const err = await res.json()
-      alert(err.error || 'Someone else might have drawn this prayer! Try again.')
+      alert(err.error || 'Someone else might have received this prayer! Try again.')
       setDrawnPrayer(null)
     }
   }
@@ -82,7 +82,7 @@ export default function WithdrawPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Withdraw a Prayer</h1>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Receive a Prayer</h1>
         <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">
           You have <strong>{credits}</strong> credit{credits !== 1 ? 's' : ''}
         </p>
@@ -91,7 +91,7 @@ export default function WithdrawPage() {
       {drawing && (
         <div className="text-center py-20 flex flex-col items-center justify-center space-y-4">
           <div className="text-5xl animate-bounce">✨</div>
-          <p className="font-serif italic text-xl text-ink dark:text-white">Seeking a prayer for you...</p>
+          <p className="font-serif italic text-xl text-ink dark:text-white">Seeking grace for you...</p>
         </div>
       )}
 
@@ -119,7 +119,7 @@ export default function WithdrawPage() {
                       : 'bg-gray-100 text-gray-400 dark:bg-white/5 dark:text-gray-600 cursor-not-allowed'
                   }`}
                 >
-                  Draw this Prayer
+                  Receive this Prayer
                 </button>
               </div>
             )
@@ -142,7 +142,7 @@ export default function WithdrawPage() {
             
             {drawnPrayer.intention && (
               <div className="mb-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Intention</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Intention of the Giver</p>
                 <p className="font-serif italic text-xl text-ink dark:text-gray-100 leading-relaxed">
                   "{drawnPrayer.intention}"
                 </p>
@@ -153,7 +153,7 @@ export default function WithdrawPage() {
               {drawnPrayer.depositor?.country && (
                 <p className="flex items-center gap-2">🌍 <span>From: <strong className="text-ink dark:text-white">{drawnPrayer.depositor.country}</strong></span></p>
               )}
-              <p className="flex items-center gap-2">🤲 <span>Offered for: <strong className="text-ink dark:text-white">{drawnPrayer.offered_for}</strong></span></p>
+              <p className="flex items-center gap-2">🤲 <span>Originally for: <strong className="text-ink dark:text-white">{drawnPrayer.offered_for}</strong></span></p>
             </div>
           </div>
 
@@ -163,7 +163,7 @@ export default function WithdrawPage() {
               disabled={withdrawing}
               className="w-full btn-gold py-4 rounded-xl font-bold uppercase tracking-wider shadow-lg flex items-center justify-center gap-2"
             >
-              {withdrawing ? 'Keeping...' : 'Keep for me'}
+              {withdrawing ? 'Receiving...' : 'Receive Grace'}
             </button>
             <button
               onClick={handleGift}

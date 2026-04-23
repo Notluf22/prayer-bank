@@ -68,8 +68,8 @@ export default async function DashboardPage() {
         <Link href="/dashboard/deposit" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-colors block">
           <span className="text-3xl">🤲</span>
           <div className="flex-1">
-            <p className="font-semibold text-ink dark:text-white">Deposit a Prayer</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Offer a prayer and earn credits</p>
+            <p className="font-semibold text-ink dark:text-white">Share a Prayer</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Share the grace of your completed prayers</p>
           </div>
           <span className="text-gold text-lg">→</span>
         </Link>
@@ -77,8 +77,8 @@ export default async function DashboardPage() {
         <Link href="/dashboard/withdraw" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-colors block">
           <span className="text-3xl">📿</span>
           <div className="flex-1">
-            <p className="font-semibold text-ink dark:text-white">Withdraw a Prayer</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Receive prayers from around the world</p>
+            <p className="font-semibold text-ink dark:text-white">Receive a Prayer</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Receive grace from the global treasury</p>
           </div>
           <span className="text-gold text-lg">→</span>
         </Link>
