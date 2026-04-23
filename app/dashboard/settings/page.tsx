@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 export default function SettingsPage() {
   const [displayName, setDisplayName] = useState('')
   const [country, setCountry] = useState('')
+  const [isAnonymous, setIsAnonymous] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
@@ -19,13 +20,14 @@ export default function SettingsPage() {
 
       const { data: profile } = await supabase
         .from('profiles')
-        .select('display_name, country')
+        .select('display_name, country, is_anonymous')
         .eq('id', user.id)
         .single()
 
       if (profile) {
         setDisplayName(profile.display_name)
         setCountry(profile.country || '')
+        setIsAnonymous(profile.is_anonymous || false)
       }
       setLoading(false)
     }
@@ -44,7 +46,8 @@ export default function SettingsPage() {
       .from('profiles')
       .update({
         display_name: displayName,
-        country: country
+        country: country,
+        is_anonymous: isAnonymous
       })
       .eq('id', user.id)
 
@@ -100,6 +103,20 @@ export default function SettingsPage() {
             <option value="France">France</option>
             <option value="Germany">Germany</option>
           </select>
+        </div>
+
+        <div className="flex items-center justify-between p-4 bg-ink/10 dark:bg-white/5 rounded-2xl border border-gold/10">
+          <div>
+            <p className="text-sm font-semibold text-ink dark:text-white">Always Share Anonymously</p>
+            <p className="text-[10px] text-gray-500">Hide your name across the entire Treasury</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsAnonymous(!isAnonymous)}
+            className={`w-12 h-6 rounded-full transition-colors relative ${isAnonymous ? 'bg-gold' : 'bg-gray-300 dark:bg-gray-700'}`}
+          >
+            <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${isAnonymous ? 'translate-x-6' : ''}`}></div>
+          </button>
         </div>
 
         <button
