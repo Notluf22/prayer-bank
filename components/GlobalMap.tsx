@@ -74,7 +74,7 @@ export default function GlobalMap({ recentPrayers }: { recentPrayers: any[] }) {
     <div className="relative w-full aspect-[2/1] rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
       {/* The new cleaner map image */}
       <Image 
-        src="/sacred_world_map_clean_1776967774479.png"
+        src="/clean_map.png"
         alt="Sacred World Map"
         fill
         className="object-contain"

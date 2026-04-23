@@ -75,6 +75,11 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end mr-1">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Grace</span>
+            <span className="text-xs font-bold text-gold leading-none">{profile?.credits ?? 0}</span>
+          </div>
+          <div className="h-4 w-px bg-white/10"></div>
           <ThemeToggle />
           
           <button
