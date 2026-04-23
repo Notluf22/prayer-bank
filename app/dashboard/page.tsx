@@ -95,7 +95,7 @@ export default async function DashboardPage() {
         <Link href="/dashboard/redeem" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-colors block">
           <span className="text-3xl">✨</span>
           <div className="flex-1">
-            <p className="font-semibold text-ink dark:text-white">Redeem a Gift Card</p>
+            <p className="font-semibold text-ink dark:text-white">Redeem a Prayer Gift</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Enter a code from someone who gifted you</p>
           </div>
           <span className="text-gold text-lg">→</span>

@@ -23,7 +23,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
     { href: '/dashboard/withdraw', label: '📿', title: 'Receive' },
     { href: '/dashboard/gift', label: '🎁', title: 'Gift' },
     { href: '/dashboard/vault', label: '🏛', title: 'Vault' },
-    { href: '/dashboard/redeem', label: '✨', title: 'Redeem' },
+    { href: '/dashboard/redeem', label: '✨', title: 'Redeem Gift' },
   ]
 
   return (

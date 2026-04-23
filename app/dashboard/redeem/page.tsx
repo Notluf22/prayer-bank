@@ -47,7 +47,7 @@ export default function RedeemPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Redeem a Gift Card</h1>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Redeem a Prayer Gift</h1>
         <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Enter the code someone gifted you</p>
       </div>
 

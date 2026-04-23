@@ -2,15 +2,12 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Prayer, PRAYER_TYPES } from '@/lib/types'
-import GiftModal from '@/components/GiftModal'
-
 export default function WithdrawPage() {
   const [credits, setCredits] = useState(0)
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [drawing, setDrawing] = useState(false)
   const [withdrawing, setWithdrawing] = useState(false)
   const [drawnPrayer, setDrawnPrayer] = useState<Prayer | null>(null)
-  const [giftPrayer, setGiftPrayer] = useState<Prayer | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -65,11 +62,6 @@ export default function WithdrawPage() {
     }
   }
 
-  async function handleGift() {
-    if (!drawnPrayer) return
-    if (credits < drawnPrayer.credit_value) return
-    setGiftPrayer(drawnPrayer)
-  }
 
   if (loadingInitial) {
     return (
@@ -166,13 +158,6 @@ export default function WithdrawPage() {
               {withdrawing ? 'Receiving...' : 'Receive Grace'}
             </button>
             <button
-              onClick={handleGift}
-              disabled={withdrawing}
-              className="w-full bg-white dark:bg-card-bg border-2 border-gold text-gold py-4 rounded-xl font-bold uppercase tracking-wider hover:bg-amber-50 dark:hover:bg-white/5 transition-all"
-            >
-              Gift as Card
-            </button>
-            <button
               onClick={() => setDrawnPrayer(null)}
               disabled={withdrawing}
               className="w-full mt-4 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
@@ -181,18 +166,6 @@ export default function WithdrawPage() {
             </button>
           </div>
         </div>
-      )}
-
-      {giftPrayer && (
-        <GiftModal
-          prayer={giftPrayer}
-          onClose={() => setGiftPrayer(null)}
-          onGifted={(code) => {
-            setCredits(c => c - giftPrayer.credit_value)
-            setDrawnPrayer(null) // Go back to main screen after gifting
-            setGiftPrayer(null)
-          }}
-        />
       )}
     </div>
   )
