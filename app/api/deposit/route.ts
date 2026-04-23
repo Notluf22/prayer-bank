@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { type, intention, offeredFor, creditValue } = await request.json()
+  const { type, intention, offeredFor, creditValue, needId } = await request.json()
   if (!type || !offeredFor || !creditValue) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
   }
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     .single()
 
   // Insert prayer
-  const { error: prayerError } = await supabase.from('prayers').insert({
+  const { data: newPrayer, error: prayerError } = await supabase.from('prayers').insert({
     depositor_id: user.id,
     type,
     intention: intention || null,
@@ -27,8 +27,16 @@ export async function POST(request: Request) {
     credit_value: creditValue,
     status: 'available',
     country: profile?.country ?? null,
-  })
+  }).select().single()
   if (prayerError) return NextResponse.json({ error: prayerError.message }, { status: 500 })
+
+  // If this prayer was for a specific need, fulfill it
+  if (needId) {
+    await supabase
+      .from('needs')
+      .update({ status: 'fulfilled', prayed_by: user.id })
+      .eq('id', needId)
+  }
 
   // Increment user credits and total_deposited
   const { error: profileError } = await supabase.rpc('add_credits', {

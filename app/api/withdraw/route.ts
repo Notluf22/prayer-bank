@@ -51,5 +51,11 @@ export async function POST(request: Request) {
     amount: -prayer.credit_value,
   })
 
+  // Increment sparks_received for the depositor (The Constellation logic)
+  await supabase
+    .from('profiles')
+    .update({ sparks_received: (await supabase.from('profiles').select('sparks_received').eq('id', prayer.depositor_id).single()).data?.sparks_received + 1 })
+    .eq('id', prayer.depositor_id)
+
   return NextResponse.json({ success: true })
 }

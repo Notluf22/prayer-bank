@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { PRAYER_TYPES } from '@/lib/types'
 
 export default function DepositPage() {
@@ -9,26 +9,35 @@ export default function DepositPage() {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
 
+  const searchParams = useSearchParams()
+  const needId = searchParams.get('needId')
+  const specificIntention = searchParams.get('intention')
+
   async function handleDeposit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const res = await fetch('/api/deposit', {
+    
+    // Optimistic UI: Transition to "Done" state immediately
+    setDone(true)
+    
+    fetch('/api/deposit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         type: selectedType.id, 
-        intention: 'For the recipient of this grace', 
+        intention: specificIntention || 'For the recipient of this grace', 
         offeredFor: 'The Global Treasury',
-        creditValue: selectedType.creditValue 
+        creditValue: selectedType.creditValue,
+        needId: needId
       }),
-    })
-    setLoading(false)
-    if (res.ok) {
-      setDone(true)
+    }).then(() => {
+      setLoading(false)
       router.refresh()
-    } else {
+    }).catch(() => {
+      setDone(false)
+      setLoading(false)
       alert('Something went wrong. Please try again.')
-    }
+    })
   }
 
   if (done) return (
@@ -52,6 +61,14 @@ export default function DepositPage() {
       </div>
 
       <form onSubmit={handleDeposit} className="space-y-6">
+        {specificIntention && (
+          <div className="bg-ink dark:bg-white/5 border border-gold/30 rounded-2xl p-5 mb-4 shadow-xl animate-in fade-in zoom-in">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gold mb-2 text-center">Special Intention</p>
+            <p className="font-serif italic text-white dark:text-gray-200 text-center text-lg leading-relaxed">
+              "{specificIntention}"
+            </p>
+          </div>
+        )}
         {/* Prayer type grid */}
         <div>
           <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-3">Type of Prayer Completed</label>
