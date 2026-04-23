@@ -72,8 +72,8 @@ export default function WithdrawPage() {
   return (
     <div>
       <div className="text-center mb-6">
-        <h1 className="font-serif text-3xl font-semibold text-ink">Withdraw a Prayer</h1>
-        <p className="font-serif italic text-gray-500 mt-1">
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Withdraw a Prayer</h1>
+        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">
           You have <strong>{credits}</strong> credit{credits !== 1 ? 's' : ''}
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function WithdrawPage() {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${
-              filter === f ? 'border-gold bg-amber-50 text-ink' : 'border-gray-200 text-gray-500 hover:border-gold/50'
+              filter === f ? 'border-gold bg-amber-50 dark:bg-gold/20 text-ink dark:text-white' : 'border-gray-200 dark:border-gray-700 text-gray-500 hover:border-gold/50 dark:hover:border-gold/50'
             }`}
           >
             {filterLabels[f] ?? f}
@@ -98,8 +98,8 @@ export default function WithdrawPage() {
       {!loading && filtered.length === 0 && (
         <div className="text-center py-12">
           <p className="text-4xl mb-3">🙏</p>
-          <p className="font-serif italic text-gray-500">No prayers available in this category yet.</p>
-          <p className="text-sm text-gray-400 mt-1">Be the first to deposit one!</p>
+          <p className="font-serif italic text-gray-500 dark:text-gray-400">No prayers available in this category yet.</p>
+          <p className="text-sm text-gray-400">Be the first to deposit one!</p>
         </div>
       )}
 
@@ -113,7 +113,7 @@ export default function WithdrawPage() {
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold uppercase tracking-widest text-gold mb-1">{meta.name}</p>
                 {prayer.intention && (
-                  <p className="font-serif italic text-ink text-sm leading-relaxed mb-1">"{prayer.intention}"</p>
+                  <p className="font-serif italic text-ink dark:text-gray-200 text-sm leading-relaxed mb-1">"{prayer.intention}"</p>
                 )}
                 <p className="text-xs text-gray-400">
                   {prayer.depositor?.country && `🌍 ${prayer.depositor.country} · `}
@@ -121,7 +121,7 @@ export default function WithdrawPage() {
                 </p>
               </div>
               <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                <span className="text-xs text-gray-400 border border-gray-200 rounded-full px-2 py-0.5">
+                <span className="text-xs text-gray-400 border border-gray-200 dark:border-gray-700 rounded-full px-2 py-0.5">
                   {prayer.credit_value} credit{prayer.credit_value > 1 ? 's' : ''}
                 </span>
                 <button
@@ -129,8 +129,8 @@ export default function WithdrawPage() {
                   disabled={!canAfford || withdrawing === prayer.id}
                   className={`text-xs px-3 py-1.5 rounded-lg border font-semibold transition-all ${
                     canAfford
-                      ? 'border-gray-300 hover:border-gold text-ink'
-                      : 'border-gray-100 text-gray-300 cursor-not-allowed'
+                      ? 'border-gray-300 dark:border-gray-600 hover:border-gold text-ink dark:text-white'
+                      : 'border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
                   }`}
                 >
                   {withdrawing === prayer.id ? '…' : 'Keep for me'}
@@ -140,8 +140,8 @@ export default function WithdrawPage() {
                   disabled={!canAfford || withdrawing === prayer.id}
                   className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
                     canAfford
-                      ? 'border-gold bg-amber-50 text-gold hover:bg-amber-100'
-                      : 'border-gray-100 text-gray-300 cursor-not-allowed'
+                      ? 'border-gold bg-amber-50 dark:bg-gold/10 text-gold hover:bg-amber-100 dark:hover:bg-gold/20'
+                      : 'border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
                   }`}
                 >
                   Gift as card ↗
@@ -159,8 +159,6 @@ export default function WithdrawPage() {
           onGifted={(code) => {
             setCredits(c => c - giftPrayer.credit_value)
             setPrayers(ps => ps.filter(p => p.id !== giftPrayer.id))
-            setGiftPrayer(null)
-            alert(`Gift card created! Code: ${code}\nShare the link or email it to your friend.`)
           }}
         />
       )}

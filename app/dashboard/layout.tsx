@@ -14,7 +14,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .single()
 
   return (
-    <div className="min-h-screen bg-parchment">
+    <div className="min-h-screen bg-parchment dark:bg-parchment-dark transition-colors duration-300">
       <NavBar profile={profile} />
       <main className="max-w-2xl mx-auto px-4 py-8">{children}</main>
     </div>

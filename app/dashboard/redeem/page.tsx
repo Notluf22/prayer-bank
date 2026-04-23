@@ -27,15 +27,15 @@ export default function RedeemPage() {
   if (result) return (
     <div className="text-center py-10">
       <p className="text-5xl mb-4">{result.type === 'credits' ? '✨' : '🕊'}</p>
-      <h2 className="font-serif text-3xl font-semibold text-ink mb-2">Gift Received!</h2>
+      <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">Gift Received!</h2>
       {result.type === 'credits' ? (
-        <p className="text-gray-600 font-serif italic text-lg mb-6">
+        <p className="text-gray-600 dark:text-gray-300 font-serif italic text-lg mb-6">
           +{result.credits} prayer credits added to your account
         </p>
       ) : (
         <div className="card-gold rounded-xl p-5 mb-6 text-left max-w-sm mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest text-gold mb-2">{result.prayer?.type}</p>
-          <p className="font-serif italic text-ink">"{result.prayer?.intention}"</p>
+          <p className="font-serif italic text-ink dark:text-gray-200">"{result.prayer?.intention}"</p>
           <p className="text-sm text-gray-400 mt-3">This prayer has been received and is now yours.</p>
         </div>
       )}
@@ -47,8 +47,8 @@ export default function RedeemPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink">Redeem a Gift Card</h1>
-        <p className="font-serif italic text-gray-500 mt-1">Enter the code someone gifted you</p>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Redeem a Gift Card</h1>
+        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Enter the code someone gifted you</p>
       </div>
 
       <form onSubmit={handleRedeem} className="space-y-5">
@@ -60,7 +60,7 @@ export default function RedeemPage() {
             value={code}
             onChange={e => setCode(e.target.value.toUpperCase())}
             placeholder="e.g. GRACE-K7X2-9MQP"
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 font-mono text-sm tracking-wider focus:outline-none focus:border-gold bg-white uppercase"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 font-mono text-sm tracking-wider focus:outline-none focus:border-gold bg-white dark:bg-white/5 dark:text-white uppercase"
           />
         </div>
 
@@ -73,9 +73,9 @@ export default function RedeemPage() {
         </button>
       </form>
 
-      <div className="mt-8 p-4 bg-amber-50 rounded-xl border border-gold/20">
+      <div className="mt-8 p-4 bg-amber-50 dark:bg-gold/10 rounded-xl border border-gold/20">
         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">How it works</p>
-        <p className="text-sm text-gray-600">Someone deposited a prayer, withdrew it and gifted it to you as a card. Enter the code above to receive the prayer or the credits they sent you.</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">Someone deposited a prayer, withdrew it and gifted it to you as a card. Enter the code above to receive the prayer or the credits they sent you.</p>
       </div>
     </div>
   )

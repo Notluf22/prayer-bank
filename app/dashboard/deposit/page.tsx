@@ -27,8 +27,8 @@ export default function DepositPage() {
   if (done) return (
     <div className="text-center py-16">
       <p className="text-5xl mb-4">🕊</p>
-      <h2 className="font-serif text-3xl font-semibold text-ink mb-2">Prayer Deposited</h2>
-      <p className="text-gray-500 mb-2">You earned <strong>+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</strong></p>
+      <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">Prayer Deposited</h2>
+      <p className="text-gray-500 dark:text-gray-400 mb-2">You earned <strong>+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</strong></p>
       <p className="font-serif italic text-gray-400 mb-8">May your prayer bring grace to someone in need.</p>
       <div className="flex gap-3 justify-center">
         <button onClick={() => { setDone(false); setIntention('') }} className="btn-gold px-6 py-2 rounded-xl font-serif">Deposit another</button>
@@ -40,8 +40,8 @@ export default function DepositPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink">Deposit a Prayer</h1>
-        <p className="font-serif italic text-gray-500 mt-1">Offer your prayer to the treasury</p>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Deposit a Prayer</h1>
+        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Offer your prayer to the treasury</p>
       </div>
 
       <form onSubmit={handleDeposit} className="space-y-6">
@@ -56,8 +56,8 @@ export default function DepositPage() {
                 onClick={() => setSelectedType(pt)}
                 className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
                   selectedType.id === pt.id
-                    ? 'border-gold bg-amber-50 text-ink'
-                    : 'border-gray-200 bg-white text-gray-600 hover:border-gold/50'
+                    ? 'border-gold bg-amber-50 dark:bg-gold/10 text-ink dark:text-white'
+                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:border-gold/50 dark:hover:border-gold/50'
                 }`}
               >
                 <span className="text-xl">{pt.emoji}</span>
@@ -78,7 +78,7 @@ export default function DepositPage() {
             onChange={e => setIntention(e.target.value)}
             placeholder="e.g. Offered for peace in the world, for a sick loved one…"
             rows={3}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white resize-none"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white dark:bg-white/5 dark:text-white resize-none"
           />
         </div>
 
@@ -88,15 +88,15 @@ export default function DepositPage() {
           <select
             value={offeredFor}
             onChange={e => setOfferedFor(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white dark:bg-[#251c30] dark:text-white"
           >
-            {OFFERED_FOR_OPTIONS.map(o => <option key={o}>{o}</option>)}
+            {OFFERED_FOR_OPTIONS.map(o => <option key={o} value={o} className="dark:bg-[#251c30]">{o}</option>)}
           </select>
         </div>
 
         {/* Credit preview */}
-        <div className="flex justify-between items-center bg-amber-50 rounded-xl px-4 py-3 border border-gold/20">
-          <span className="text-sm text-gray-600">Credits you will earn</span>
+        <div className="flex justify-between items-center bg-amber-50 dark:bg-gold/10 rounded-xl px-4 py-3 border border-gold/20">
+          <span className="text-sm text-gray-600 dark:text-gray-300">Credits you will earn</span>
           <span className="font-serif text-lg font-semibold text-gold">+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</span>
         </div>
 

@@ -9,11 +9,24 @@
   --gold-light: #e8d08a;
   --gold-pale: #fdf8ee;
   --parchment: #faf6ef;
+  --ink: #2d1f3d;
+  --card-bg: #ffffff;
+  --border: rgba(181, 144, 42, 0.2);
+}
+
+.dark {
+  --parchment: #1a1421;
+  --ink: #e0d8eb;
+  --gold-pale: #2d1f3d;
+  --card-bg: #251c30;
+  --border: rgba(232, 208, 138, 0.2);
 }
 
 body {
   background-color: var(--parchment);
+  color: var(--ink);
   font-family: 'Lato', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .font-serif {
@@ -32,17 +45,21 @@ body {
 
 /* Gold border card */
 .card-gold {
-  border: 1px solid rgba(181, 144, 42, 0.2);
-  background: #ffffff;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  transition: all 0.3s ease;
 }
 
 /* Subtle gold button */
 .btn-gold {
   border: 1px solid var(--gold);
-  color: #2d1f3d;
+  color: var(--ink);
   background: transparent;
-  transition: background 0.15s;
+  transition: all 0.3s ease;
 }
 .btn-gold:hover {
   background: rgba(181, 144, 42, 0.08);
+}
+.dark .btn-gold:hover {
+  background: rgba(181, 144, 42, 0.15);
 }
