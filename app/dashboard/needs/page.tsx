@@ -35,21 +35,36 @@ export default function NeedsPage() {
     setLoading(false)
   }
 
+  const [error, setError] = useState('')
+
+  const VULGAR_WORDS = ['badword1', 'badword2', 'vulgar', 'inappropriate'] // I'll use a placeholder list, you can expand this
+
+  function isSafe(text: string) {
+    const lower = text.toLowerCase()
+    return !VULGAR_WORDS.some(word => lower.includes(word))
+  }
+
   async function handlePost(e: React.FormEvent) {
     e.preventDefault()
     if (!newNeed.trim()) return
+    setError('')
+    
+    if (!isSafe(newNeed)) {
+      setError('Please keep the Needs Wall sacred and respectful.')
+      return
+    }
     
     setPosting(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
-    const { error } = await supabase.from('needs').insert({
+    const { error: postError } = await supabase.from('needs').insert({
       user_id: user.id,
       intention: newNeed
     })
 
     setPosting(false)
-    if (!error) {
+    if (!postError) {
       setNewNeed('')
       fetchNeeds()
     }
@@ -88,6 +103,7 @@ export default function NeedsPage() {
         >
           {posting ? 'Posting...' : 'Post to the Wall'}
         </button>
+        {error && <p className="text-center text-red-400 text-[10px] mt-2 font-bold uppercase tracking-widest">{error}</p>}
       </form>
 
       <div className="space-y-4">
@@ -102,7 +118,7 @@ export default function NeedsPage() {
           needs.map((need) => (
             <div key={need.id} className="card-gold rounded-2xl p-5 shadow-md flex flex-col gap-4 group hover:border-gold/40 transition-all">
               <div>
-                <p className="text-xs font-bold text-gold uppercase tracking-tighter mb-1">{need.user?.display_name || 'Anonymous'}</p>
+                <p className="text-xs font-bold text-gold uppercase tracking-widest mb-1">A Soul in Need</p>
                 <p className="font-serif italic text-lg text-ink dark:text-gray-200 leading-snug">
                   "{need.intention}"
                 </p>
