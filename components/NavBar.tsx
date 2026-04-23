@@ -22,9 +22,10 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
     { href: '/dashboard/needs', label: '🕯', title: 'Needs', mobile: true },
     { href: '/dashboard/deposit', label: '🤲', title: 'Share', mobile: true },
     { href: '/dashboard/withdraw', label: '📿', title: 'Receive', mobile: true },
-    { href: '/dashboard/gift', label: '🎁', title: 'Gift', mobile: false },
-    { href: '/dashboard/vault', label: '🏛', title: 'Vault', mobile: false },
+    {href: '/dashboard/gift', label: '🎁', title: 'Gift', mobile: false },
+    { href: '/dashboard/vault', label: '🏛', title: 'Vault', mobile: true },
     { href: '/dashboard/redeem', label: '✨', title: 'Redeem', mobile: false },
+
   ]
 
   return (

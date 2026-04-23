@@ -12,43 +12,59 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  const SAINT_QUOTES = [
-    { text: "Love is the beauty of the soul.", saint: "St. Augustine" },
-    { text: "Let nothing disturb you, let nothing frighten you. All things are passing; God never changes.", saint: "St. Teresa of Avila" },
-    { text: "The world's thy ship and not thy home.", saint: "St. Thérèse of Lisieux" },
-    { text: "He who knows how to forgive prepares for himself many graces from God.", saint: "St. Faustina" },
-    { text: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine" },
-    { text: "Charity is the measure by which Our Lord judges all things.", saint: "St. Padre Pio" },
-    { text: "If you want to find God, look for Him in the poor.", saint: "St. Vincent de Paul" }
-  ]
+const SAINT_QUOTES = [
+  { text: "Love is the beauty of the soul.", saint: "St. Augustine" },
+  { text: "Let nothing disturb you, let nothing frighten you. All things are passing; God never changes.", saint: "St. Teresa of Avila" },
+  { text: "The world's thy ship and not thy home.", saint: "St. Thérèse of Lisieux" },
+  { text: "He who knows how to forgive prepares for himself many graces from God.", saint: "St. Faustina" },
+  { text: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine" },
+  { text: "Charity is the measure by which Our Lord judges all things.", saint: "St. Padre Pio" },
+  { text: "If you want to find God, look for Him in the poor.", saint: "St. Vincent de Paul" },
+  { text: "The soul is like a castle made of a single diamond.", saint: "St. Teresa of Avila" },
+  { text: "Peace begins with a smile.", saint: "St. Mother Teresa" },
+  { text: "To have a right to do a thing is not at all the same as to be right in doing it.", saint: "G.K. Chesterton" }
+]
+
+export default function DashboardPage() {
+  const [profile, setProfile] = useState<any>(null)
+  const [greeting, setGreeting] = useState('')
+  const [dailyQuote, setDailyQuote] = useState({ text: '', saint: '' })
+  const [globalCount, setGlobalCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
 
   useEffect(() => {
-    async function loadData() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-      setProfile(profileData)
-
-      const { count } = await supabase.from('prayers').select('*', { count: 'exact', head: true })
-      setGlobalCount(count || 0)
-      setLoading(false)
-    }
-    loadData()
-
-    // Daily Quote Logic
+    // 1. Set Daily Quote & Greeting Immediately
     const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24))
     setDailyQuote(SAINT_QUOTES[dayOfYear % SAINT_QUOTES.length])
 
-    // Set a soulful greeting
     const hours = new Date().getHours()
     if (hours < 12) setGreeting('Peace be with you this morning.')
     else if (hours < 18) setGreeting('Grace attend you this afternoon.')
     else setGreeting('A blessed evening to you.')
+
+    // 2. Load Async Data
+    async function loadData() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+        setProfile(profileData)
+
+        const { count } = await supabase.from('prayers').select('*', { count: 'exact', head: true })
+        setGlobalCount(count || 0)
+      } catch (err) {
+        console.error("Data loading failed", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
 
     const channel = supabase
       .channel('global-pulse')
@@ -62,34 +78,37 @@ export default function DashboardPage() {
 
   if (loading) return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-8 animate-pulse">
-      <div className="h-32 bg-white/5 rounded-3xl"></div>
+      <div className="h-40 bg-white/5 rounded-3xl"></div>
       <div className="h-64 bg-white/5 rounded-3xl"></div>
       <div className="space-y-4">
-        <div className="h-16 bg-white/5 rounded-xl"></div>
-        <div className="h-16 bg-white/5 rounded-xl"></div>
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-20 bg-white/5 rounded-xl"></div>
+        ))}
       </div>
     </div>
   )
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <p className="text-gold text-xs tracking-[8px] ornament mb-4"></p>
-        <h1 className="font-serif text-4xl font-semibold text-ink dark:text-white">
+      <div className="text-center mb-12">
+        <div className="ornament mb-6"></div>
+        <h1 className="font-serif text-4xl font-semibold text-ink dark:text-white mb-6">
           Welcome, {profile?.display_name || 'Friend'}
         </h1>
-        <div className="mt-4 max-w-lg mx-auto">
-          <p className="font-serif italic text-gold/80 dark:text-gold/60 text-xl leading-relaxed">
+        <div className="max-w-lg mx-auto bg-gold/5 dark:bg-gold/10 p-6 rounded-2xl border border-gold/10 relative">
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-parchment dark:bg-parchment-dark px-4 text-gold text-sm">✦ Wisdom ✦</span>
+          <p className="font-serif italic text-gold-dark dark:text-gold-light text-xl leading-relaxed">
             "{dailyQuote.text}"
           </p>
-          <p className="text-[10px] uppercase tracking-[3px] text-gray-500 mt-2 font-bold">
+          <p className="text-[10px] uppercase tracking-[4px] text-gray-500 mt-4 font-bold">
             — {dailyQuote.saint}
           </p>
         </div>
       </div>
 
       {/* Soulful Header with Constellation - The Main Sanctuary Piece */}
-      <div className="relative rounded-3xl p-12 mb-8 overflow-hidden bg-ink/40 border border-gold/10 shadow-2xl min-h-[260px] flex flex-col justify-center items-center text-center group">
+      <div className="relative rounded-3xl p-12 mb-10 overflow-hidden bg-ink/40 border border-gold/10 shadow-2xl min-h-[280px] flex flex-col justify-center items-center text-center group">
+
         <Constellation sparks={profile?.sparks_received ?? 0} />
         
         {/* Daily Blessing Shimmer */}
@@ -118,6 +137,8 @@ export default function DashboardPage() {
 
       {/* Actions */}
       <div className="space-y-3 mb-16">
+      {/* Primary Actions */}
+      <div className="space-y-3 mb-8">
         <Link href="/dashboard/needs" className="bg-ink dark:bg-white/5 rounded-xl p-5 flex items-center gap-4 hover:bg-ink/90 dark:hover:bg-white/10 transition-all block border border-gold/10 group hover:scale-[1.01]">
           <span className="text-3xl group-hover:scale-110 transition-transform">🕯️</span>
           <div className="flex-1">
@@ -145,6 +166,35 @@ export default function DashboardPage() {
           <span className="text-gold text-lg">→</span>
         </Link>
       </div>
+
+      {/* Secondary Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-16">
+        <Link href="/dashboard/vault" className="bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all border border-white/5 group">
+          <span className="text-2xl group-hover:scale-110 transition-transform">🏛️</span>
+          <div className="flex-1">
+            <p className="font-semibold text-white text-sm">Grace Vault</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Your History</p>
+          </div>
+        </Link>
+
+        <Link href="/dashboard/gift" className="bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all border border-white/5 group">
+          <span className="text-2xl group-hover:scale-110 transition-transform">🎁</span>
+          <div className="flex-1">
+            <p className="font-semibold text-white text-sm">Gift a Prayer</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Send Blessing</p>
+          </div>
+        </Link>
+
+        <Link href="/dashboard/redeem" className="bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all border border-white/5 group">
+          <span className="text-2xl group-hover:scale-110 transition-transform">✨</span>
+          <div className="flex-1">
+            <p className="font-semibold text-white text-sm">Redeem Code</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Claim Grace</p>
+          </div>
+        </Link>
+      </div>
+
+
 
       {/* Real-time Treasury Pulse Footer */}
       <div className="text-center py-8 border-t border-gold/10 mt-8">
