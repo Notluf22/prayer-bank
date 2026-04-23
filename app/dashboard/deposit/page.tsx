@@ -30,7 +30,7 @@ export default function DepositPage() {
 
   if (done) return (
     <div className="text-center py-16">
-      <p className="text-5xl mb-4">🕊</p>
+      <p className="text-5xl mb-4">🤲</p>
       <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">Prayer Deposited</h2>
       <p className="text-gray-500 dark:text-gray-400 mb-2">You earned <strong>+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</strong></p>
       <p className="font-serif italic text-gray-400 mb-8">May your prayer bring grace to someone in need.</p>

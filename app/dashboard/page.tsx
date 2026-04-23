@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import GlobalMap from '@/components/GlobalMap'
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -16,6 +17,14 @@ export default async function DashboardPage() {
     .select('*', { count: 'exact', head: true })
     .eq('status', 'available')
 
+  // Fetch recent available prayers for the map
+  const { data: recentPrayers } = await supabase
+    .from('prayers')
+    .select('id, country, type')
+    .eq('status', 'available')
+    .order('created_at', { ascending: false })
+    .limit(10)
+
   return (
     <div>
       <div className="text-center mb-8">
@@ -31,6 +40,11 @@ export default async function DashboardPage() {
             I prayed for you.
           </p>
         </div>
+      </div>
+
+      {/* Global Activity Map */}
+      <div className="mb-8">
+        <GlobalMap recentPrayers={recentPrayers ?? []} />
       </div>
 
       {/* Stats */}
@@ -52,7 +66,7 @@ export default async function DashboardPage() {
       {/* Actions */}
       <div className="space-y-3">
         <Link href="/dashboard/deposit" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-colors block">
-          <span className="text-3xl">🕊</span>
+          <span className="text-3xl">🤲</span>
           <div className="flex-1">
             <p className="font-semibold text-ink dark:text-white">Deposit a Prayer</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Offer a prayer and earn credits</p>

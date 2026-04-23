@@ -19,7 +19,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
 
   const links = [
     { href: '/dashboard', label: '🏠', title: 'Home' },
-    { href: '/dashboard/deposit', label: '🕊', title: 'Deposit' },
+    { href: '/dashboard/deposit', label: '🤲', title: 'Deposit' },
     { href: '/dashboard/withdraw', label: '📿', title: 'Withdraw' },
     { href: '/dashboard/gift', label: '🎁', title: 'Gift' },
     { href: '/dashboard/redeem', label: '✨', title: 'Redeem' },
