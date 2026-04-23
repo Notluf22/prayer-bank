@@ -7,9 +7,20 @@ import Constellation from '@/components/Constellation'
 export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null)
   const [greeting, setGreeting] = useState('')
+  const [dailyQuote, setDailyQuote] = useState({ text: '', saint: '' })
   const [globalCount, setGlobalCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
+
+  const SAINT_QUOTES = [
+    { text: "Love is the beauty of the soul.", saint: "St. Augustine" },
+    { text: "Let nothing disturb you, let nothing frighten you. All things are passing; God never changes.", saint: "St. Teresa of Avila" },
+    { text: "The world's thy ship and not thy home.", saint: "St. Thérèse of Lisieux" },
+    { text: "He who knows how to forgive prepares for himself many graces from God.", saint: "St. Faustina" },
+    { text: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine" },
+    { text: "Charity is the measure by which Our Lord judges all things.", saint: "St. Padre Pio" },
+    { text: "If you want to find God, look for Him in the poor.", saint: "St. Vincent de Paul" }
+  ]
 
   useEffect(() => {
     async function loadData() {
@@ -28,6 +39,10 @@ export default function DashboardPage() {
       setLoading(false)
     }
     loadData()
+
+    // Daily Quote Logic
+    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24))
+    setDailyQuote(SAINT_QUOTES[dayOfYear % SAINT_QUOTES.length])
 
     // Set a soulful greeting
     const hours = new Date().getHours()
@@ -63,12 +78,12 @@ export default function DashboardPage() {
         <h1 className="font-serif text-4xl font-semibold text-ink dark:text-white">
           Welcome, {profile?.display_name || 'Friend'}
         </h1>
-        <div className="mt-2">
-          <p className="font-serif italic text-gold/80 dark:text-gold/60 text-lg">
-            "What is sweeter than telling 'I Love you'?"
+        <div className="mt-4 max-w-lg mx-auto">
+          <p className="font-serif italic text-gold/80 dark:text-gold/60 text-xl leading-relaxed">
+            "{dailyQuote.text}"
           </p>
-          <p className="font-serif text-gray-500 dark:text-gray-400">
-            I prayed for you.
+          <p className="text-[10px] uppercase tracking-[3px] text-gray-500 mt-2 font-bold">
+            — {dailyQuote.saint}
           </p>
         </div>
       </div>
