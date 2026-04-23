@@ -5,11 +5,11 @@ import { Prayer, PRAYER_TYPES } from '@/lib/types'
 import GiftModal from '@/components/GiftModal'
 
 export default function WithdrawPage() {
-  const [prayers, setPrayers] = useState<Prayer[]>([])
   const [credits, setCredits] = useState(0)
-  const [filter, setFilter] = useState('All')
-  const [loading, setLoading] = useState(true)
-  const [withdrawing, setWithdrawing] = useState<string | null>(null)
+  const [loadingInitial, setLoadingInitial] = useState(true)
+  const [drawing, setDrawing] = useState(false)
+  const [withdrawing, setWithdrawing] = useState(false)
+  const [drawnPrayer, setDrawnPrayer] = useState<Prayer | null>(null)
   const [giftPrayer, setGiftPrayer] = useState<Prayer | null>(null)
   const supabase = createClient()
 
@@ -19,138 +19,169 @@ export default function WithdrawPage() {
       if (!user) return
       const { data: profile } = await supabase.from('profiles').select('credits').eq('id', user.id).single()
       setCredits(profile?.credits ?? 0)
-      const { data } = await supabase
-        .from('prayers')
-        .select('*, depositor:profiles!depositor_id(display_name, country)')
-        .eq('status', 'available')
-        .neq('depositor_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(50)
-      setPrayers(data ?? [])
-      setLoading(false)
+      setLoadingInitial(false)
     }
     load()
   }, [])
 
-  const filtered = filter === 'All' ? prayers : prayers.filter(p => p.type === filter)
-
-  async function handleWithdraw(prayer: Prayer) {
-    if (credits < prayer.credit_value) {
-      alert(`You need ${prayer.credit_value} credits but only have ${credits}. Deposit more prayers first!`)
+  async function handleDraw(typeId: string, cost: number) {
+    if (credits < cost) {
+      alert(`You need ${cost} credits but only have ${credits}. Deposit more prayers first!`)
       return
     }
-    setWithdrawing(prayer.id)
-    const res = await fetch('/api/withdraw', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prayerId: prayer.id }),
-    })
+    setDrawing(true)
+    const res = await fetch(`/api/draw_random?type=${typeId}`)
+    setDrawing(false)
+    
     if (res.ok) {
-      setCredits(c => c - prayer.credit_value)
-      setPrayers(ps => ps.filter(p => p.id !== prayer.id))
+      const { prayer } = await res.json()
+      setDrawnPrayer(prayer)
     } else {
       const err = await res.json()
       alert(err.error || 'Something went wrong.')
     }
-    setWithdrawing(null)
   }
 
-  async function handleGift(prayer: Prayer) {
-    if (credits < prayer.credit_value) {
-      alert(`You need ${prayer.credit_value} credits but only have ${credits}. Deposit more prayers first!`)
-      return
+  async function handleKeep() {
+    if (!drawnPrayer) return
+    if (credits < drawnPrayer.credit_value) return
+
+    setWithdrawing(true)
+    const res = await fetch('/api/withdraw', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prayerId: drawnPrayer.id }),
+    })
+    setWithdrawing(false)
+
+    if (res.ok) {
+      setCredits(c => c - drawnPrayer.credit_value)
+      alert("You have kept this prayer. It is now yours to fulfill!")
+      setDrawnPrayer(null) // Reset to draw again
+    } else {
+      const err = await res.json()
+      alert(err.error || 'Someone else might have drawn this prayer! Try again.')
+      setDrawnPrayer(null)
     }
-    setGiftPrayer(prayer)
   }
 
-  const filters = ['All', ...PRAYER_TYPES.map(p => p.id)]
-  const filterLabels: Record<string, string> = { All: 'All' }
-  PRAYER_TYPES.forEach(p => { filterLabels[p.id] = p.name })
-  const prayerMeta: Record<string, { emoji: string; name: string }> = {}
-  PRAYER_TYPES.forEach(p => { prayerMeta[p.id] = { emoji: p.emoji, name: p.name } })
+  async function handleGift() {
+    if (!drawnPrayer) return
+    if (credits < drawnPrayer.credit_value) return
+    setGiftPrayer(drawnPrayer)
+  }
+
+  if (loadingInitial) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-400 font-serif italic">Loading your treasury...</p>
+      </div>
+    )
+  }
 
   return (
     <div>
-      <div className="text-center mb-6">
+      <div className="text-center mb-8">
         <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Withdraw a Prayer</h1>
         <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">
           You have <strong>{credits}</strong> credit{credits !== 1 ? 's' : ''}
         </p>
       </div>
 
-      {/* Filter pills */}
-      <div className="flex gap-2 flex-wrap mb-5">
-        {['All', 'hail_mary', 'holy_rosary', 'holy_mass', 'divine_mercy', 'novena'].map(f => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${
-              filter === f ? 'border-gold bg-amber-50 dark:bg-gold/20 text-ink dark:text-white' : 'border-gray-200 dark:border-gray-700 text-gray-500 hover:border-gold/50 dark:hover:border-gold/50'
-            }`}
-          >
-            {filterLabels[f] ?? f}
-          </button>
-        ))}
-      </div>
-
-      {loading && <p className="text-center text-gray-400 font-serif italic py-12">Loading prayers…</p>}
-
-      {!loading && filtered.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-4xl mb-3">🙏</p>
-          <p className="font-serif italic text-gray-500 dark:text-gray-400">No prayers available in this category yet.</p>
-          <p className="text-sm text-gray-400">Be the first to deposit one!</p>
+      {drawing && (
+        <div className="text-center py-20 flex flex-col items-center justify-center space-y-4">
+          <div className="text-5xl animate-bounce">✨</div>
+          <p className="font-serif italic text-xl text-ink dark:text-white">Seeking a prayer for you...</p>
         </div>
       )}
 
-      <div className="space-y-3">
-        {filtered.map(prayer => {
-          const meta = prayerMeta[prayer.type] ?? { emoji: '🙏', name: prayer.type }
-          const canAfford = credits >= prayer.credit_value
-          return (
-            <div key={prayer.id} className="card-gold rounded-xl p-4 flex gap-3">
-              <span className="text-2xl mt-1">{meta.emoji}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold uppercase tracking-widest text-gold mb-1">{meta.name}</p>
-                {prayer.intention && (
-                  <p className="font-serif italic text-ink dark:text-gray-200 text-sm leading-relaxed mb-1">"{prayer.intention}"</p>
-                )}
-                <p className="text-xs text-gray-400">
-                  {prayer.depositor?.country && `🌍 ${prayer.depositor.country} · `}
-                  For: {prayer.offered_for}
+      {!drawing && !drawnPrayer && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {PRAYER_TYPES.map(p => {
+            const canAfford = credits >= p.creditValue
+            return (
+              <div key={p.id} className="card-gold rounded-xl p-5 flex flex-col relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-4xl">{p.emoji}</span>
+                  <span className="text-xs font-bold text-gray-500 bg-gray-100 dark:bg-white/10 dark:text-gray-300 px-3 py-1 rounded-full">
+                    {p.creditValue} credit{p.creditValue !== 1 ? 's' : ''}
+                  </span>
+                </div>
+                <h3 className="font-serif text-xl font-semibold text-ink dark:text-white mb-1">{p.name}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex-1">{p.description}</p>
+                
+                <button
+                  onClick={() => handleDraw(p.id, p.creditValue)}
+                  disabled={!canAfford}
+                  className={`w-full py-3 rounded-xl font-bold uppercase tracking-wider text-sm transition-all ${
+                    canAfford
+                      ? 'btn-gold shadow-md'
+                      : 'bg-gray-100 text-gray-400 dark:bg-white/5 dark:text-gray-600 cursor-not-allowed'
+                  }`}
+                >
+                  Draw this Prayer
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {!drawing && drawnPrayer && (
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-6">
+            <p className="text-xs font-bold uppercase tracking-widest text-gold mb-2">You drew a</p>
+            <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white flex items-center justify-center gap-2">
+              {PRAYER_TYPES.find(p => p.id === drawnPrayer.type)?.emoji} 
+              {PRAYER_TYPES.find(p => p.id === drawnPrayer.type)?.name}
+            </h2>
+          </div>
+
+          <div className="card-gold rounded-2xl p-8 mb-6 shadow-xl relative overflow-hidden text-center bg-[#fdf8ee] dark:bg-card-bg">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0"></div>
+            
+            {drawnPrayer.intention && (
+              <div className="mb-6">
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Intention</p>
+                <p className="font-serif italic text-xl text-ink dark:text-gray-100 leading-relaxed">
+                  "{drawnPrayer.intention}"
                 </p>
               </div>
-              <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                <span className="text-xs text-gray-400 border border-gray-200 dark:border-gray-700 rounded-full px-2 py-0.5">
-                  {prayer.credit_value} credit{prayer.credit_value > 1 ? 's' : ''}
-                </span>
-                <button
-                  onClick={() => handleWithdraw(prayer)}
-                  disabled={!canAfford || withdrawing === prayer.id}
-                  className={`text-xs px-3 py-1.5 rounded-lg border font-semibold transition-all ${
-                    canAfford
-                      ? 'border-gray-300 dark:border-gray-600 hover:border-gold text-ink dark:text-white'
-                      : 'border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                  }`}
-                >
-                  {withdrawing === prayer.id ? '…' : 'Keep for me'}
-                </button>
-                <button
-                  onClick={() => handleGift(prayer)}
-                  disabled={!canAfford || withdrawing === prayer.id}
-                  className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
-                    canAfford
-                      ? 'border-gold bg-amber-50 dark:bg-gold/10 text-gold hover:bg-amber-100 dark:hover:bg-gold/20'
-                      : 'border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                  }`}
-                >
-                  Gift as card ↗
-                </button>
-              </div>
+            )}
+            
+            <div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-white/5 py-4 px-6 rounded-xl inline-block text-left mx-auto">
+              {drawnPrayer.depositor?.country && (
+                <p className="flex items-center gap-2">🌍 <span>From: <strong className="text-ink dark:text-white">{drawnPrayer.depositor.country}</strong></span></p>
+              )}
+              <p className="flex items-center gap-2">🤲 <span>Offered for: <strong className="text-ink dark:text-white">{drawnPrayer.offered_for}</strong></span></p>
             </div>
-          )
-        })}
-      </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleKeep}
+              disabled={withdrawing}
+              className="w-full btn-gold py-4 rounded-xl font-bold uppercase tracking-wider shadow-lg flex items-center justify-center gap-2"
+            >
+              {withdrawing ? 'Keeping...' : 'Keep for me'}
+            </button>
+            <button
+              onClick={handleGift}
+              disabled={withdrawing}
+              className="w-full bg-white dark:bg-card-bg border-2 border-gold text-gold py-4 rounded-xl font-bold uppercase tracking-wider hover:bg-amber-50 dark:hover:bg-white/5 transition-all"
+            >
+              Gift as Card
+            </button>
+            <button
+              onClick={() => setDrawnPrayer(null)}
+              disabled={withdrawing}
+              className="w-full mt-4 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            >
+              Return to bank
+            </button>
+          </div>
+        </div>
+      )}
 
       {giftPrayer && (
         <GiftModal
@@ -158,7 +189,8 @@ export default function WithdrawPage() {
           onClose={() => setGiftPrayer(null)}
           onGifted={(code) => {
             setCredits(c => c - giftPrayer.credit_value)
-            setPrayers(ps => ps.filter(p => p.id !== giftPrayer.id))
+            setDrawnPrayer(null) // Go back to main screen after gifting
+            setGiftPrayer(null)
           }}
         />
       )}
