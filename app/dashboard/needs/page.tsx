@@ -109,7 +109,11 @@ export default function NeedsPage() {
       <div className="space-y-4">
         <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Pending Needs</h2>
         {loading ? (
-          <p className="text-center py-10 text-gray-400 italic">Listening for requests...</p>
+          <div className="space-y-4 animate-pulse">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-white/5 rounded-2xl p-5 h-32 border border-white/5"></div>
+            ))}
+          </div>
         ) : needs.length === 0 ? (
           <div className="text-center py-10 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-2xl">
              <p className="text-gray-400 italic">The wall is currently empty. Everyone is blessed!</p>

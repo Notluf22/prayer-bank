@@ -47,7 +47,17 @@ export default function VaultPage() {
   PRAYER_TYPES.forEach(p => { prayerMeta[p.id] = { emoji: p.emoji, name: p.name } })
 
   if (loading) {
-    return <div className="text-center py-20 font-serif italic text-gray-400">Opening the vault...</div>
+    return (
+      <div className="max-w-2xl mx-auto py-10 space-y-8 animate-pulse">
+        <div className="h-20 bg-white/5 rounded-3xl mx-auto w-2/3"></div>
+        <div className="h-12 bg-white/5 rounded-xl"></div>
+        <div className="space-y-4">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="h-24 bg-white/5 rounded-2xl border border-white/5"></div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
