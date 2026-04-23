@@ -71,16 +71,16 @@ export default function GlobalMap({ recentPrayers }: { recentPrayers: any[] }) {
   }, [recentPrayers, supabase])
 
   return (
-    <div className="relative w-full aspect-[2/1] rounded-2xl overflow-hidden bg-ink/50 border border-gold/10 shadow-2xl">
-      {/* The generated map image */}
+    <div className="relative w-full aspect-[2/1] rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
+      {/* The new cleaner map image */}
       <Image 
-        src="/sacred_world_map.png"
+        src="/sacred_world_map_clean_1776967774479.png"
         alt="Sacred World Map"
         fill
-        className="object-cover opacity-60 grayscale-[0.2]"
+        className="object-contain"
       />
       
-      {/* Pulse points */}
+      {/* Pulse points - made smaller and more subtle */}
       {activities.map((act) => (
         <div 
           key={act.id}
@@ -88,24 +88,21 @@ export default function GlobalMap({ recentPrayers }: { recentPrayers: any[] }) {
           style={{ left: `${act.x}%`, top: `${act.y}%`, transform: 'translate(-50%, -50%)' }}
         >
           <div className="relative">
-            {/* The pulse animation */}
-            <div className="absolute -inset-2 bg-gold/40 rounded-full animate-ping"></div>
-            <div className="relative w-2.5 h-2.5 bg-gold rounded-full shadow-[0_0_15px_rgba(212,175,55,1)] border border-white/20"></div>
+            {/* Minimal pulse */}
+            <div className="absolute -inset-1.5 bg-gold/30 rounded-full animate-ping"></div>
+            <div className="relative w-2 h-2 bg-gold rounded-full shadow-[0_0_10px_rgba(212,175,55,0.8)]"></div>
             
             {/* Tooltip */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-ink/90 text-white text-[10px] py-1 px-2 rounded border border-gold/20 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-xl">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/90 text-white text-[10px] py-1 px-2 rounded border border-white/10 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
               <span className="text-gold font-bold">{act.country}</span>: {act.type.replace('_', ' ')}
             </div>
           </div>
         </div>
       ))}
 
-      <div className="absolute bottom-4 left-4 bg-ink/60 backdrop-blur-md border border-gold/20 rounded-lg p-2 flex items-center gap-2">
-        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,197,94,1)]"></div>
-        <div>
-          <p className="text-[10px] text-gold font-bold uppercase tracking-widest leading-none">Live Treasury</p>
-          <p className="text-[8px] text-gray-400 mt-0.5">Real-time global activity</p>
-        </div>
+      <div className="absolute bottom-3 right-4 flex items-center gap-2 opacity-50">
+        <div className="w-1 h-1 bg-gold rounded-full animate-pulse"></div>
+        <p className="text-[8px] text-gray-500 uppercase tracking-widest">Global Activity</p>
       </div>
     </div>
   )

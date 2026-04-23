@@ -68,7 +68,7 @@ export default function NeedsPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">The Need Wall</h1>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">The Needs Wall</h1>
         <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Post a burden, carry a cross for another</p>
       </div>
 

@@ -19,6 +19,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
 
   const links = [
     { href: '/dashboard', label: '🏠', title: 'Home' },
+    { href: '/dashboard/needs', label: '🕯', title: 'Needs Wall' },
     { href: '/dashboard/deposit', label: '🤲', title: 'Deposit' },
     { href: '/dashboard/withdraw', label: '📿', title: 'Receive' },
     { href: '/dashboard/gift', label: '🎁', title: 'Gift' },
@@ -74,13 +75,6 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex flex-col items-end mr-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Credits</span>
-            <span className="text-sm font-bold text-gold">{profile?.credits ?? 0}</span>
-          </div>
-          
-          <div className="h-8 w-px bg-gray-200 dark:bg-white/10 mx-1 hidden sm:block"></div>
-          
           <ThemeToggle />
           
           <button

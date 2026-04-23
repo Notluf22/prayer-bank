@@ -48,30 +48,26 @@ export default async function DashboardPage() {
         <GlobalMap recentPrayers={recentPrayers ?? []} />
       </div>
 
-      {/* Stats with Constellation Background */}
-      <div className="relative card-gold rounded-2xl p-6 mb-8 overflow-hidden shadow-xl border-gold/20">
+      {/* Soulful Header with Constellation */}
+      <div className="relative rounded-3xl p-8 mb-8 overflow-hidden bg-ink/40 border border-gold/10 shadow-2xl min-h-[160px] flex flex-col justify-center items-center text-center">
         <Constellation sparks={profile?.sparks_received ?? 0} />
         
-        <div className="relative z-10 flex justify-between items-center">
-          <div className="text-center flex-1 border-r border-gold/10">
-            <p className="font-serif text-3xl font-semibold text-ink dark:text-white">{profile?.credits ?? 0}</p>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-[2px]">Credits</p>
-          </div>
-          <div className="text-center flex-1 border-r border-gold/10">
-            <p className="font-serif text-3xl font-semibold text-gold">{profile?.sparks_received ?? 0}</p>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-[2px]">Stars</p>
-          </div>
-          <div className="text-center flex-1">
-            <p className="font-serif text-3xl font-semibold text-ink dark:text-white">{profile?.total_deposited ?? 0}</p>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-[2px]">Shared</p>
-          </div>
+        <div className="relative z-10 space-y-2">
+          <p className="font-serif text-2xl md:text-3xl text-white dark:text-gray-100 italic">
+            {profile?.sparks_received === 0 
+              ? "Your sky is quiet and peaceful." 
+              : "Your constellation is beginning to glow."}
+          </p>
+          <p className="text-xs text-gold/60 uppercase tracking-[3px] font-bold">
+            {profile?.total_deposited ?? 0} Souls Blessed Through Your Prayers
+          </p>
         </div>
 
-        {profile?.sparks_received > 0 && (
-          <p className="relative z-10 text-center text-[10px] text-gold/60 mt-4 italic font-serif">
-            Your constellation is growing. Each star is a soul you've blessed.
-          </p>
-        )}
+        {/* Humble Grace Indicator */}
+        <div className="absolute bottom-4 right-6 flex items-center gap-2 opacity-40">
+          <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Available Grace:</span>
+          <span className="text-xs font-bold text-gold">{profile?.credits ?? 0}</span>
+        </div>
       </div>
 
       {/* Actions */}
@@ -79,7 +75,7 @@ export default async function DashboardPage() {
         <Link href="/dashboard/needs" className="bg-ink dark:bg-white/5 rounded-xl p-5 flex items-center gap-4 hover:bg-ink/90 dark:hover:bg-white/10 transition-colors block border border-gold/10 group">
           <span className="text-3xl group-hover:scale-110 transition-transform">🕯️</span>
           <div className="flex-1">
-            <p className="font-semibold text-white">The Need Wall</p>
+            <p className="font-semibold text-white">The Needs Wall</p>
             <p className="text-sm text-gray-400">Post a need or pray for a stranger's intention</p>
           </div>
           <span className="text-gold text-lg">→</span>
