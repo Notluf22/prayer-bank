@@ -22,7 +22,6 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
     { href: '/dashboard/needs', label: '🕯', title: 'Needs', mobile: true },
     { href: '/dashboard/deposit', label: '🤲', title: 'Share', mobile: true },
     { href: '/dashboard/withdraw', label: '📿', title: 'Receive', mobile: true },
-    { href: '/dashboard/settings', label: '⚙️', title: 'Settings', mobile: true },
     { href: '/dashboard/gift', label: '🎁', title: 'Gift', mobile: false },
     { href: '/dashboard/vault', label: '🏛', title: 'Vault', mobile: false },
     { href: '/dashboard/redeem', label: '✨', title: 'Redeem', mobile: false },
@@ -82,6 +81,15 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
             <span className="text-xs font-bold text-gold leading-none">{profile?.credits ?? 0}</span>
           </div>
           <div className="h-4 w-px bg-white/10"></div>
+          
+          <Link 
+            href="/dashboard/settings" 
+            className={`p-2 transition-colors ${pathname === '/dashboard/settings' ? 'text-gold' : 'text-gray-400 hover:text-white'}`}
+            title="Profile Settings"
+          >
+            <span className="text-xl">⚙️</span>
+          </Link>
+
           <ThemeToggle />
           
           <button
