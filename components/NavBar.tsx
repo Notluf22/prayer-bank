@@ -18,13 +18,14 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
   }
 
   const links = [
-    { href: '/dashboard', label: '🏠', title: 'Home' },
-    { href: '/dashboard/needs', label: '🕯', title: 'Needs Wall' },
-    { href: '/dashboard/deposit', label: '🤲', title: 'Deposit' },
-    { href: '/dashboard/withdraw', label: '📿', title: 'Receive' },
-    { href: '/dashboard/gift', label: '🎁', title: 'Gift' },
-    { href: '/dashboard/vault', label: '🏛', title: 'Vault' },
-    { href: '/dashboard/redeem', label: '✨', title: 'Redeem Gift' },
+    { href: '/dashboard', label: '🏠', title: 'Home', mobile: true },
+    { href: '/dashboard/needs', label: '🕯', title: 'Needs', mobile: true },
+    { href: '/dashboard/deposit', label: '🤲', title: 'Share', mobile: true },
+    { href: '/dashboard/withdraw', label: '📿', title: 'Receive', mobile: true },
+    { href: '/dashboard/settings', label: '⚙️', title: 'Settings', mobile: true },
+    { href: '/dashboard/gift', label: '🎁', title: 'Gift', mobile: false },
+    { href: '/dashboard/vault', label: '🏛', title: 'Vault', mobile: false },
+    { href: '/dashboard/redeem', label: '✨', title: 'Redeem', mobile: false },
   ]
 
   return (
@@ -34,11 +35,12 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
           <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20 group-hover:bg-gold/20 transition-colors">
             <span className="text-sm">🕊</span>
           </div>
-          <span className="font-serif text-lg font-bold tracking-tight text-ink dark:text-white">
+          <span className="font-serif text-lg font-bold tracking-tight text-ink dark:text-white hidden xs:inline">
             PrayerBank
           </span>
         </Link>
 
+        {/* Desktop Navigation Icons */}
         <div className="hidden md:flex items-center gap-1 bg-gray-100/50 dark:bg-white/5 p-1 rounded-xl border border-gray-200/50 dark:border-white/5">
           {links.map(l => (
             <Link
@@ -57,13 +59,13 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
           ))}
         </div>
 
-        {/* Mobile Navigation Icons */}
-        <div className="flex md:hidden items-center gap-0.5">
-          {links.map(l => (
+        {/* Mobile Navigation Icons - Simplified */}
+        <div className="flex md:hidden items-center gap-1">
+          {links.filter(l => l.mobile).map(l => (
             <Link
               key={l.href}
               href={l.href}
-              className={`w-9 h-9 flex items-center justify-center rounded-lg text-lg transition-all ${
+              className={`w-9 h-9 flex items-center justify-center rounded-lg text-xl transition-all ${
                 pathname === l.href 
                   ? 'text-gold bg-gold/10' 
                   : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
