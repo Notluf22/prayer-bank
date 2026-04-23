@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Prayer, PRAYER_TYPES } from '@/lib/types'
 
@@ -36,37 +35,8 @@ export default function VaultPage() {
     }
     load()
   }, [])
-
   const prayerMeta: Record<string, { emoji: string; name: string }> = {}
   PRAYER_TYPES.forEach(p => { prayerMeta[p.id] = { emoji: p.emoji, name: p.name } })
-
-  const [selectedForBouquet, setSelectedForBouquet] = useState<string[]>([])
-  const router = useRouter()
-
-  function toggleSelection(id: string) {
-    setSelectedForBouquet(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    )
-  }
-
-  function handleCreateBouquet() {
-    const selected = givenPrayers.filter(p => selectedForBouquet.includes(p.id))
-    const totalCredits = selected.reduce((sum, p) => sum + p.credit_value, 0)
-    const summary = selected.map(p => {
-      const meta = prayerMeta[p.type] ?? { emoji: '🙏', name: p.type }
-      return `${meta.emoji} ${meta.name}${p.intention ? `: ${p.intention}` : ''}`
-    }).join('\n')
-
-    const message = `I have gathered a Spiritual Bouquet for you from the Global Prayer Bank:\n\n${summary}`
-    
-    // Redirect to gift page with state
-    const params = new URLSearchParams({
-      message,
-      credits: totalCredits.toString(),
-      type: 'bouquet'
-    })
-    router.push(`/dashboard/gift?${params.toString()}`)
-  }
 
   if (loading) {
     return <div className="text-center py-20 font-serif italic text-gray-400">Opening the vault...</div>
@@ -81,7 +51,7 @@ export default function VaultPage() {
 
       <div className="flex gap-1 bg-gray-100 dark:bg-white/5 p-1 rounded-xl mb-6 border border-gray-200/50 dark:border-white/5">
         <button
-          onClick={() => { setActiveTab('given'); setSelectedForBouquet([]) }}
+          onClick={() => setActiveTab('given')}
           className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
             activeTab === 'given' ? 'bg-white dark:bg-white/10 text-gold shadow-sm' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
           }`}
@@ -89,7 +59,7 @@ export default function VaultPage() {
           Grace Shared ({givenPrayers.length})
         </button>
         <button
-          onClick={() => { setActiveTab('received'); setSelectedForBouquet([]) }}
+          onClick={() => setActiveTab('received')}
           className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
             activeTab === 'received' ? 'bg-white dark:bg-white/10 text-gold shadow-sm' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
           }`}
@@ -97,21 +67,6 @@ export default function VaultPage() {
           Grace Received ({receivedPrayers.length})
         </button>
       </div>
-
-      {activeTab === 'given' && selectedForBouquet.length > 0 && (
-        <div className="bg-gold/10 border border-gold/20 rounded-xl p-4 mb-6 flex items-center justify-between animate-in fade-in slide-in-from-top-4">
-          <div>
-            <p className="text-sm font-bold text-gold">{selectedForBouquet.length} Prayers Selected</p>
-            <p className="text-xs text-gray-500">Bundle them into a Spiritual Bouquet</p>
-          </div>
-          <button 
-            onClick={handleCreateBouquet}
-            className="btn-gold px-4 py-2 rounded-lg text-xs font-bold"
-          >
-            ✦ Create Bouquet ✦
-          </button>
-        </div>
-      )}
 
       <div className="space-y-4">
         {activeTab === 'given' ? (
@@ -122,22 +77,8 @@ export default function VaultPage() {
           ) : (
             givenPrayers.map(p => {
               const meta = prayerMeta[p.type] ?? { emoji: '🙏', name: p.type }
-              const isSelected = selectedForBouquet.includes(p.id)
               return (
-                <div 
-                  key={p.id} 
-                  className={`card-gold rounded-xl p-4 flex gap-3 transition-all cursor-pointer ${
-                    isSelected ? 'border-gold bg-gold/5 ring-1 ring-gold/20' : ''
-                  }`}
-                  onClick={() => toggleSelection(p.id)}
-                >
-                  <div className="flex items-center">
-                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                      isSelected ? 'bg-gold border-gold' : 'border-gray-200 dark:border-gray-700'
-                    }`}>
-                      {isSelected && <span className="text-white text-[10px]">✓</span>}
-                    </div>
-                  </div>
+                <div key={p.id} className="card-gold rounded-xl p-4 flex gap-3">
                   <span className="text-2xl">{meta.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
