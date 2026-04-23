@@ -20,8 +20,12 @@ export default function DepositPage() {
       body: JSON.stringify({ type: selectedType.id, intention, offeredFor, creditValue: selectedType.creditValue }),
     })
     setLoading(false)
-    if (res.ok) setDone(true)
-    else alert('Something went wrong. Please try again.')
+    if (res.ok) {
+      setDone(true)
+      router.refresh()
+    } else {
+      alert('Something went wrong. Please try again.')
+    }
   }
 
   if (done) return (

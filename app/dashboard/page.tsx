@@ -23,7 +23,14 @@ export default async function DashboardPage() {
         <h1 className="font-serif text-4xl font-semibold text-ink dark:text-white">
           Welcome, {profile?.display_name || 'Friend'}
         </h1>
-        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Your treasury of faith</p>
+        <div className="mt-2">
+          <p className="font-serif italic text-gold/80 dark:text-gold/60 text-lg">
+            "What is sweeter than telling 'I Love you'?"
+          </p>
+          <p className="font-serif text-gray-500 dark:text-gray-400">
+            I prayed for you.
+          </p>
+        </div>
       </div>
 
       {/* Stats */}
