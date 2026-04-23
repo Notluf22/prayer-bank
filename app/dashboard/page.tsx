@@ -4,13 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import Constellation from '@/components/Constellation'
 
-export default function DashboardPage() {
-  const [profile, setProfile] = useState<any>(null)
-  const [greeting, setGreeting] = useState('')
-  const [dailyQuote, setDailyQuote] = useState({ text: '', saint: '' })
-  const [globalCount, setGlobalCount] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+
 
 const SAINT_QUOTES = [
   { text: "Love is the beauty of the soul.", saint: "St. Augustine" },
@@ -204,6 +198,7 @@ export default function DashboardPage() {
             The Treasury currently holds <span className="text-gold font-bold not-italic px-1">{globalCount}</span> offerings of grace
           </p>
         </div>
+      </div>
       </div>
     </div>
   )
