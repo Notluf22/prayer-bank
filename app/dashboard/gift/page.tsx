@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 const BUNDLES = [
   { credits: 5,  label: 'Small Blessing',  description: 'Enough for 5 Hail Marys or 1 Divine Mercy' },
@@ -8,10 +9,24 @@ const BUNDLES = [
 ]
 
 export default function GiftPage() {
-  const [selected, setSelected] = useState(BUNDLES[0])
-  const [message, setMessage] = useState('')
+  const searchParams = useSearchParams()
+  const initialMessage = searchParams.get('message') || ''
+  const initialCredits = parseInt(searchParams.get('credits') || '5')
+  const isBouquet = searchParams.get('type') === 'bouquet'
+
+  const [selected, setSelected] = useState(BUNDLES.find(b => b.credits === initialCredits) || BUNDLES[0])
+  const [message, setMessage] = useState(initialMessage)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ code: string; shareUrl: string; emailError?: string | null } | null>(null)
+
+  useEffect(() => {
+    if (initialMessage) setMessage(initialMessage)
+    if (initialCredits) {
+      const bundle = BUNDLES.find(b => b.credits === initialCredits)
+      if (bundle) setSelected(bundle)
+      else setSelected({ credits: initialCredits, label: 'Spiritual Bouquet', description: 'A custom collection of prayers' })
+    }
+  }, [initialMessage, initialCredits])
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault()

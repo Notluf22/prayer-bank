@@ -1,13 +1,12 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { PRAYER_TYPES, OFFERED_FOR_OPTIONS } from '@/lib/types'
+import { PRAYER_TYPES } from '@/lib/types'
 
 export default function DepositPage() {
   const router = useRouter()
   const [selectedType, setSelectedType] = useState(PRAYER_TYPES[0])
   const [intention, setIntention] = useState('')
-  const [offeredFor, setOfferedFor] = useState(OFFERED_FOR_OPTIONS[0])
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
 
@@ -17,7 +16,12 @@ export default function DepositPage() {
     const res = await fetch('/api/deposit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: selectedType.id, intention, offeredFor, creditValue: selectedType.creditValue }),
+      body: JSON.stringify({ 
+        type: selectedType.id, 
+        intention, 
+        offeredFor: 'General Intention', // Default since we removed the dropdown
+        creditValue: selectedType.creditValue 
+      }),
     })
     setLoading(false)
     if (res.ok) {
@@ -31,11 +35,11 @@ export default function DepositPage() {
   if (done) return (
     <div className="text-center py-16">
       <p className="text-5xl mb-4">🤲</p>
-      <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">Prayer Deposited</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-2">You earned <strong>+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</strong></p>
-      <p className="font-serif italic text-gray-400 mb-8">May your prayer bring grace to someone in need.</p>
+      <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">Prayer Shared</h2>
+      <p className="text-gray-500 dark:text-gray-400 mb-2">You shared grace and earned <strong>+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</strong></p>
+      <p className="font-serif italic text-gray-400 mb-8">Your prayer is now in the global treasury, waiting to bless someone.</p>
       <div className="flex gap-3 justify-center">
-        <button onClick={() => { setDone(false); setIntention('') }} className="btn-gold px-6 py-2 rounded-xl font-serif">Deposit another</button>
+        <button onClick={() => { setDone(false); setIntention('') }} className="btn-gold px-6 py-2 rounded-xl font-serif">Share another</button>
         <button onClick={() => router.push('/dashboard')} className="border border-gray-200 px-6 py-2 rounded-xl text-sm">Back to dashboard</button>
       </div>
     </div>
@@ -51,7 +55,7 @@ export default function DepositPage() {
       <form onSubmit={handleDeposit} className="space-y-6">
         {/* Prayer type grid */}
         <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-3">Type of Prayer</label>
+          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-3">Type of Prayer Completed</label>
           <div className="grid grid-cols-2 gap-2">
             {PRAYER_TYPES.map(pt => (
               <button
@@ -76,26 +80,15 @@ export default function DepositPage() {
 
         {/* Intention */}
         <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-2">Your Intention (optional)</label>
+          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-2">What was your prayer for? (Intention)</label>
           <textarea
             value={intention}
             onChange={e => setIntention(e.target.value)}
-            placeholder="e.g. Offered for peace in the world, for a sick loved one…"
-            rows={3}
+            placeholder="e.g. My family, peace in my heart, for a friend's healing…"
+            rows={4}
             className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white dark:bg-white/5 dark:text-white resize-none"
           />
-        </div>
-
-        {/* Offered for */}
-        <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-2">Offered For</label>
-          <select
-            value={offeredFor}
-            onChange={e => setOfferedFor(e.target.value)}
-            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white dark:bg-[#251c30] dark:text-white"
-          >
-            {OFFERED_FOR_OPTIONS.map(o => <option key={o} value={o} className="dark:bg-[#251c30]">{o}</option>)}
-          </select>
+          <p className="text-[10px] text-gray-400 mt-2 italic">Be as specific as you like. This will be shared with the person who receives your prayer.</p>
         </div>
 
         {/* Credit preview */}
@@ -109,7 +102,7 @@ export default function DepositPage() {
           disabled={loading}
           className="btn-gold w-full font-serif text-lg py-4 rounded-xl disabled:opacity-50"
         >
-          {loading ? 'Depositing…' : '✦ Deposit this Prayer ✦'}
+          {loading ? 'Sharing grace…' : '✦ Share this Prayer ✦'}
         </button>
       </form>
     </div>

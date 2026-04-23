@@ -56,7 +56,7 @@ export default function WithdrawPage() {
 
     if (res.ok) {
       setCredits(c => c - drawnPrayer.credit_value)
-      alert("This prayer has been received. May the grace of this intention be with you!")
+      alert("This prayer has been received. May the grace of this intention be with you! \n\nWe have sent a 'Spark of Gratitude' to the anonymous giver for you. ✨")
       setDrawnPrayer(null) // Reset to draw again
     } else {
       const err = await res.json()
