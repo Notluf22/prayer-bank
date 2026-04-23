@@ -6,7 +6,6 @@ import { PRAYER_TYPES } from '@/lib/types'
 export default function DepositPage() {
   const router = useRouter()
   const [selectedType, setSelectedType] = useState(PRAYER_TYPES[0])
-  const [intention, setIntention] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
 
@@ -18,8 +17,8 @@ export default function DepositPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         type: selectedType.id, 
-        intention, 
-        offeredFor: 'General Intention', // Default since we removed the dropdown
+        intention: 'For the recipient of this grace', 
+        offeredFor: 'The Global Treasury',
         creditValue: selectedType.creditValue 
       }),
     })
@@ -39,7 +38,7 @@ export default function DepositPage() {
       <p className="text-gray-500 dark:text-gray-400 mb-2">You shared grace and earned <strong>+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</strong></p>
       <p className="font-serif italic text-gray-400 mb-8">Your prayer is now in the global treasury, waiting to bless someone.</p>
       <div className="flex gap-3 justify-center">
-        <button onClick={() => { setDone(false); setIntention('') }} className="btn-gold px-6 py-2 rounded-xl font-serif">Share another</button>
+        <button onClick={() => setDone(false)} className="btn-gold px-6 py-2 rounded-xl font-serif">Share another</button>
         <button onClick={() => router.push('/dashboard')} className="border border-gray-200 px-6 py-2 rounded-xl text-sm">Back to dashboard</button>
       </div>
     </div>
@@ -78,29 +77,23 @@ export default function DepositPage() {
           </div>
         </div>
 
-        {/* Intention */}
-        <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-2">What was your prayer for? (Intention)</label>
-          <textarea
-            value={intention}
-            onChange={e => setIntention(e.target.value)}
-            placeholder="e.g. My family, peace in my heart, for a friend's healing…"
-            rows={4}
-            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-white dark:bg-white/5 dark:text-white resize-none"
-          />
-          <p className="text-[10px] text-gray-400 mt-2 italic">Be as specific as you like. This will be shared with the person who receives your prayer.</p>
+        {/* Info box */}
+        <div className="p-4 bg-amber-50 dark:bg-gold/10 rounded-xl border border-gold/20">
+          <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+            By sharing, you are releasing the merit of this completed prayer to whoever receives it from the treasury.
+          </p>
         </div>
 
         {/* Credit preview */}
-        <div className="flex justify-between items-center bg-amber-50 dark:bg-gold/10 rounded-xl px-4 py-3 border border-gold/20">
-          <span className="text-sm text-gray-600 dark:text-gray-300">Credits you will earn</span>
+        <div className="flex justify-between items-center bg-white/50 dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-100 dark:border-white/5">
+          <span className="text-sm text-gray-500">Credits you will earn</span>
           <span className="font-serif text-lg font-semibold text-gold">+{selectedType.creditValue} credit{selectedType.creditValue > 1 ? 's' : ''}</span>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="btn-gold w-full font-serif text-lg py-4 rounded-xl disabled:opacity-50"
+          className="btn-gold w-full font-serif text-lg py-4 rounded-xl disabled:opacity-50 shadow-lg"
         >
           {loading ? 'Sharing grace…' : '✦ Share this Prayer ✦'}
         </button>

@@ -22,13 +22,21 @@ export default function VaultPage() {
         .eq('depositor_id', user.id)
         .order('created_at', { ascending: false })
 
-      // Fetch grace received (withdrawn by me)
-      const { data: received } = await supabase
-        .from('prayers')
-        .select('*, depositor:profiles!depositor_id(display_name, country)')
-        .eq('withdrawn_by', user.id)
+      // Fetch grace received (via transactions to get correct withdrawal order)
+      const { data: trans } = await supabase
+        .from('transactions')
+        .select(`
+          prayer:prayers (
+            *,
+            depositor:profiles!depositor_id(display_name, country)
+          )
+        `)
+        .eq('user_id', user.id)
+        .eq('type', 'withdraw')
         .order('created_at', { ascending: false })
 
+      const received = trans?.map(t => t.prayer).filter(Boolean) as any[]
+      
       setGivenPrayers(given ?? [])
       setReceivedPrayers(received ?? [])
       setLoading(false)
@@ -89,7 +97,9 @@ export default function VaultPage() {
                         {p.status === 'available' ? 'Available' : 'Received'}
                       </span>
                     </div>
-                    {p.intention && <p className="font-serif italic text-sm text-ink dark:text-gray-200 mt-1">"{p.intention}"</p>}
+                    {p.intention && p.intention !== 'For the recipient of this grace' && (
+                      <p className="font-serif italic text-sm text-ink dark:text-gray-200 mt-1">"{p.intention}"</p>
+                    )}
                     <p className="text-[10px] text-gray-400 mt-2">Shared on {new Date(p.created_at).toLocaleDateString()}</p>
                   </div>
                 </div>
@@ -109,7 +119,9 @@ export default function VaultPage() {
                   <span className="text-2xl">{meta.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-bold uppercase tracking-widest text-gold">{meta.name}</p>
-                    {p.intention && <p className="font-serif italic text-sm text-ink dark:text-gray-200 mt-1">"{p.intention}"</p>}
+                    {p.intention && p.intention !== 'For the recipient of this grace' && (
+                      <p className="font-serif italic text-sm text-ink dark:text-gray-200 mt-1">"{p.intention}"</p>
+                    )}
                     <div className="flex justify-between items-end mt-2">
                       <p className="text-[10px] text-gray-400">
                         {p.depositor?.country && `From: ${p.depositor.country} · `}
