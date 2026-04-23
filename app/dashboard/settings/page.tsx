@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 
 export default function SettingsPage() {
   const [displayName, setDisplayName] = useState('')
-  const [country, setCountry] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -20,13 +19,12 @@ export default function SettingsPage() {
 
       const { data: profile } = await supabase
         .from('profiles')
-        .select('display_name, country, is_anonymous')
+        .select('display_name, is_anonymous')
         .eq('id', user.id)
         .single()
 
       if (profile) {
         setDisplayName(profile.display_name)
-        setCountry(profile.country || '')
         setIsAnonymous(profile.is_anonymous || false)
       }
       setLoading(false)
@@ -46,7 +44,6 @@ export default function SettingsPage() {
       .from('profiles')
       .update({
         display_name: displayName,
-        country: country,
         is_anonymous: isAnonymous
       })
       .eq('id', user.id)
@@ -80,29 +77,6 @@ export default function SettingsPage() {
             className="w-full bg-white dark:bg-ink border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold dark:text-white"
             placeholder="e.g. Brother Thomas"
           />
-        </div>
-
-        <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-2">Country</label>
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="w-full bg-white dark:bg-ink border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold dark:text-white appearance-none"
-          >
-            <option value="">Select Country</option>
-            <option value="USA">USA</option>
-            <option value="UK">United Kingdom</option>
-            <option value="India">India</option>
-            <option value="Brazil">Brazil</option>
-            <option value="Philippines">Philippines</option>
-            <option value="Nigeria">Nigeria</option>
-            <option value="Australia">Australia</option>
-            <option value="Italy">Italy</option>
-            <option value="Canada">Canada</option>
-            <option value="Mexico">Mexico</option>
-            <option value="France">France</option>
-            <option value="Germany">Germany</option>
-          </select>
         </div>
 
         <div className="flex items-center justify-between p-4 bg-ink/10 dark:bg-white/5 rounded-2xl border border-gold/10">

@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import GlobalMap from '@/components/GlobalMap'
 import Constellation from '@/components/Constellation'
 
 export default async function DashboardPage() {
@@ -43,30 +42,25 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Global Activity Map */}
-      <div className="mb-8">
-        <GlobalMap recentPrayers={recentPrayers ?? []} />
-      </div>
-
-      {/* Soulful Header with Constellation */}
-      <div className="relative rounded-3xl p-8 mb-8 overflow-hidden bg-ink/40 border border-gold/10 shadow-2xl min-h-[160px] flex flex-col justify-center items-center text-center">
+      {/* Soulful Header with Constellation - The Main Sanctuary Piece */}
+      <div className="relative rounded-3xl p-12 mb-8 overflow-hidden bg-ink/40 border border-gold/10 shadow-2xl min-h-[260px] flex flex-col justify-center items-center text-center">
         <Constellation sparks={profile?.sparks_received ?? 0} />
         
-        <div className="relative z-10 space-y-2">
-          <p className="font-serif text-2xl md:text-3xl text-white dark:text-gray-100 italic">
+        <div className="relative z-10 space-y-3">
+          <p className="font-serif text-3xl md:text-4xl text-white dark:text-gray-100 italic">
             {profile?.sparks_received === 0 
               ? "Your sky is quiet and peaceful." 
-              : "Your constellation is beginning to glow."}
+              : "Your constellation is glowing with grace."}
           </p>
-          <p className="text-xs text-gold/60 uppercase tracking-[3px] font-bold">
-            {profile?.total_deposited ?? 0} Souls Blessed Through Your Prayers
+          <p className="text-sm text-gold/60 uppercase tracking-[4px] font-bold">
+            {profile?.total_deposited ?? 0} Souls Blessed
           </p>
         </div>
 
         {/* Humble Grace Indicator */}
-        <div className="absolute bottom-4 right-6 flex items-center gap-2 opacity-40">
+        <div className="absolute bottom-6 right-8 flex items-center gap-2 opacity-40">
           <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Available Grace:</span>
-          <span className="text-xs font-bold text-gold">{profile?.credits ?? 0}</span>
+          <span className="text-sm font-bold text-gold">{profile?.credits ?? 0}</span>
         </div>
       </div>
 
