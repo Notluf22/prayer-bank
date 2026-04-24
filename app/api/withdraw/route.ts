@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -57,5 +58,6 @@ export async function POST(request: Request) {
     .update({ sparks_received: (await supabase.from('profiles').select('sparks_received').eq('id', prayer.depositor_id).single()).data?.sparks_received + 1 })
     .eq('id', prayer.depositor_id)
 
+  revalidatePath('/dashboard')
   return NextResponse.json({ success: true })
 }

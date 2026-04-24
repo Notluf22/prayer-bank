@@ -59,15 +59,13 @@ export default function DashboardPage() {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
 
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-        setProfile(profileData)
+        const [profileRes, countRes] = await Promise.all([
+          supabase.from('profiles').select('*').eq('id', user.id).single(),
+          supabase.from('prayers').select('*', { count: 'exact', head: true })
+        ])
 
-        const { count } = await supabase.from('prayers').select('*', { count: 'exact', head: true })
-        setGlobalCount(count || 0)
+        if (profileRes.data) setProfile(profileRes.data)
+        if (countRes.count !== null) setGlobalCount(countRes.count)
       } catch (err) {
         console.error("Data loading failed", err)
       } finally {

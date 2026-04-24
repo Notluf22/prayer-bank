@@ -73,17 +73,31 @@ export default function NeedsPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
+    // Optimistic Update
+    const optimisticNeed: Need = {
+      id: Math.random().toString(),
+      user_id: user.id,
+      intention: newNeed,
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      user: { display_name: 'You' }
+    }
+    setNeeds(prev => [optimisticNeed, ...prev])
+    setNewNeed('')
+
     const { error: postError } = await supabase.from('needs').insert({
       user_id: user.id,
-      intention: newNeed
+      intention: optimisticNeed.intention
     })
 
     setPosting(false)
     if (!postError) {
-      setNewNeed('')
-      fetchNeeds()
+      fetchNeeds() // Refresh with real data
     } else {
       setError(postError.message)
+      // Rollback optimistic update
+      setNeeds(prev => prev.filter(n => n.id !== optimisticNeed.id))
+      setNewNeed(optimisticNeed.intention)
     }
   }
 

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
       amount: gift.credit_amount,
     })
 
+    revalidatePath('/dashboard')
     return NextResponse.json({ type: 'credits', credits: gift.credit_amount })
   }
 
@@ -53,11 +55,13 @@ export async function POST(request: Request) {
       .update({ withdrawn_by: user.id, status: 'withdrawn' })
       .eq('id', gift.prayer.id)
 
+    revalidatePath('/dashboard')
     return NextResponse.json({
       type: 'prayer',
       prayer: { type: gift.prayer.type, intention: gift.prayer.intention },
     })
   }
 
+  revalidatePath('/dashboard')
   return NextResponse.json({ error: 'Unknown gift type' }, { status: 400 })
 }

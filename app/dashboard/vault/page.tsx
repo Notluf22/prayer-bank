@@ -19,29 +19,29 @@ export default function VaultPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      // Fetch grace given (deposited by me)
-      const { data: given } = await supabase
-        .from('prayers')
-        .select('*')
-        .eq('depositor_id', user.id)
-        .order('created_at', { ascending: false })
+      // Parallel fetch given and received grace
+      const [givenRes, transRes] = await Promise.all([
+        supabase
+          .from('prayers')
+          .select('*')
+          .eq('depositor_id', user.id)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('transactions')
+          .select(`
+            prayer:prayers (
+              *,
+              depositor:profiles!depositor_id(display_name, country)
+            )
+          `)
+          .eq('user_id', user.id)
+          .eq('type', 'withdraw')
+          .order('created_at', { ascending: false })
+      ])
 
-      // Fetch grace received (via transactions to get correct withdrawal order)
-      const { data: trans } = await supabase
-        .from('transactions')
-        .select(`
-          prayer:prayers (
-            *,
-            depositor:profiles!depositor_id(display_name, country)
-          )
-        `)
-        .eq('user_id', user.id)
-        .eq('type', 'withdraw')
-        .order('created_at', { ascending: false })
-
-      const received = trans?.map(t => t.prayer).filter(Boolean) as any[]
+      const received = transRes.data?.map(t => t.prayer).filter(Boolean) as any[]
       
-      setGivenPrayers(given ?? [])
+      setGivenPrayers(givenRes.data ?? [])
       setReceivedPrayers(received ?? [])
       setLoading(false)
     }
