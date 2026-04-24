@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { UserProfile } from '@/lib/types'
 import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
+import { motion } from 'framer-motion'
 
 import ThemeToggle from './ThemeToggle'
 
@@ -48,39 +49,79 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
 
         {/* Desktop Navigation Icons */}
         <div className="hidden lg:flex items-center gap-1 bg-gray-100/50 dark:bg-white/5 p-1 rounded-xl border border-gray-200/50 dark:border-white/5">
-          {links.map(l => (
-            <Link
-              key={l.href}
-              href={l.href}
-              title={l.title}
-              className={`px-3 py-1.5 flex items-center gap-2 rounded-lg text-sm font-medium transition-all active:scale-95 ${
-                pathname === l.href 
-                  ? 'bg-white dark:bg-white/10 text-gold shadow-sm' 
-                  : 'text-gray-500 hover:text-ink dark:hover:text-white'
-              }`}
-            >
-              <span>{l.label}</span>
-              <span className={pathname === l.href ? 'inline' : 'hidden'}>{l.title}</span>
-            </Link>
-          ))}
+          {links.map(l => {
+            const isActive = pathname === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                title={l.title}
+                className={`relative group px-3 py-1.5 flex items-center gap-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive 
+                    ? 'text-gold' 
+                    : 'text-gray-500 hover:text-ink dark:hover:text-white'
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-desktop-active"
+                    className="absolute inset-0 bg-white dark:bg-white/10 shadow-sm rounded-lg"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                {!isActive && (
+                  <div className="absolute inset-0 rounded-lg bg-gray-200/50 dark:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
+                <motion.span 
+                  className="relative z-10 block origin-bottom"
+                  whileHover={{ scale: 1.2, y: -2 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  {l.label}
+                </motion.span>
+                <span className={`relative z-10 ${isActive ? 'inline' : 'hidden'}`}>{l.title}</span>
+              </Link>
+            )
+          })}
         </div>
 
         {/* Mobile/Tablet Navigation Icons - Better Labels */}
         <div className="flex lg:hidden items-center gap-1 sm:gap-2">
-          {links.filter(l => l.mobile).map(l => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`flex flex-col items-center justify-center min-w-[50px] py-1 rounded-lg transition-all active:scale-90 ${
-                pathname === l.href 
-                  ? 'text-gold bg-gold/10' 
-                  : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-              }`}
-            >
-              <span className="text-xl sm:text-2xl">{l.label}</span>
-              <span className={`text-[8px] sm:text-[10px] font-bold uppercase ${trackingTighterClass} sm:${trackingClass} mt-0.5`}>{l.title}</span>
-            </Link>
-          ))}
+          {links.filter(l => l.mobile).map(l => {
+            const isActive = pathname === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`relative group flex flex-col items-center justify-center min-w-[50px] py-1 rounded-lg transition-colors ${
+                  isActive 
+                    ? 'text-gold' 
+                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-mobile-active"
+                    className="absolute inset-0 bg-gold/10 rounded-lg"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                {!isActive && (
+                  <div className="absolute inset-0 rounded-lg bg-gray-100 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
+                <motion.span 
+                  className="text-xl sm:text-2xl relative z-10 block origin-bottom"
+                  whileHover={{ scale: 1.2, y: -2 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  {l.label}
+                </motion.span>
+                <span className={`relative z-10 text-[8px] sm:text-[10px] font-bold uppercase ${trackingTighterClass} sm:${trackingClass} mt-0.5`}>{l.title}</span>
+              </Link>
+            )
+          })}
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
