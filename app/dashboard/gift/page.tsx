@@ -5,20 +5,11 @@ import { PRAYER_TYPES } from '@/lib/types'
 import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
 
-const BUNDLES = [
-  { id: 'small', credits: 5,  label: 'Small Blessing',  description: 'Enough for 5 Hail Marys or 1 Divine Mercy' },
-  { id: 'medium', credits: 15, label: 'Rosary Bundle',   description: 'Enough for 3 full Rosaries' },
-  { id: 'large', credits: 30, label: '3 Holy Mass',     description: 'Enough for 3 Holy Mass prayers' },
-]
-
-export default function GiftPage() {
-  const { language } = useLanguage()
-  const t = translations[language]
-  const searchParams = useSearchParams()
-  const [mode, setMode] = useState<'credits' | 'prayer'>('credits')
-  const initialMessage = searchParams.get('message') || ''
-  const initialCredits = parseInt(searchParams.get('credits') || '5')
-  const isBouquet = searchParams.get('type') === 'bouquet'
+  const BUNDLES = [
+    { id: 'small', credits: 5,  label: t.small_blessing,  description: t.small_blessing_desc },
+    { id: 'medium', credits: 15, label: t.rosary_bundle,   description: t.rosary_bundle_desc },
+    { id: 'large', credits: 30, label: t.holy_mass_bundle,     description: t.holy_mass_bundle_desc },
+  ]
 
   const [selectedBundle, setSelectedBundle] = useState(BUNDLES.find(b => b.credits === initialCredits) || BUNDLES[0])
   const [selectedPrayerType, setSelectedPrayerType] = useState(PRAYER_TYPES[0])
