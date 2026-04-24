@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/lib/LanguageContext'
+import { translations } from '@/lib/translations'
 
 interface Need {
   id: string
@@ -17,27 +19,39 @@ export default function NeedsPage() {
   const [newNeed, setNewNeed] = useState('')
   const [loading, setLoading] = useState(true)
   const [posting, setPosting] = useState(false)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const supabase = createClient()
   const router = useRouter()
+  const { language } = useLanguage()
+  const t = translations[language]
 
   useEffect(() => {
     fetchNeeds()
   }, [])
 
   async function fetchNeeds() {
-    const { data } = await supabase
-      .from('needs')
-      .select('*, user:profiles!user_id(display_name)')
-      .eq('status', 'pending')
-      .order('created_at', { ascending: false })
-    
-    setNeeds(data || [])
-    setLoading(false)
+    setLoading(true)
+    setFetchError(null)
+    try {
+      const { data, error } = await supabase
+        .from('needs')
+        .select('*, user:profiles!user_id(display_name)')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+      
+      if (error) throw error
+      setNeeds(data || [])
+    } catch (err: any) {
+      console.error('Error fetching needs:', err)
+      setFetchError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const [error, setError] = useState('')
 
-  const VULGAR_WORDS = ['badword1', 'badword2', 'vulgar', 'inappropriate'] // I'll use a placeholder list, you can expand this
+  const VULGAR_WORDS = ['badword1', 'badword2', 'vulgar', 'inappropriate'] 
 
   function isSafe(text: string) {
     const lower = text.toLowerCase()
@@ -67,11 +81,12 @@ export default function NeedsPage() {
     if (!postError) {
       setNewNeed('')
       fetchNeeds()
+    } else {
+      setError(postError.message)
     }
   }
 
   async function handleCommit(need: Need) {
-    // We mark it as 'praying' and redirect to deposit
     await supabase
       .from('needs')
       .update({ status: 'praying' })
@@ -83,16 +98,16 @@ export default function NeedsPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">The Needs Wall</h1>
-        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Post a burden, carry a cross for another</p>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">{t.needs}</h1>
+        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">{t.post_burden}</p>
       </div>
 
       <form onSubmit={handlePost} className="mb-10 bg-white/50 dark:bg-white/5 p-6 rounded-2xl border border-gold/10 shadow-lg">
-        <label className="text-xs font-bold uppercase tracking-widest text-gold block mb-3 text-center">Request a Prayer</label>
+        <label className="text-xs font-bold uppercase tracking-widest text-gold block mb-3 text-center">{t.request_prayer}</label>
         <textarea
           value={newNeed}
           onChange={(e) => setNewNeed(e.target.value)}
-          placeholder="What can we pray for you today? (e.g. My grandmother's surgery, strength for my exams...)"
+          placeholder="What can we pray for you today?"
           className="w-full bg-white dark:bg-ink border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold dark:text-white resize-none"
           rows={3}
         />
@@ -101,13 +116,13 @@ export default function NeedsPage() {
           disabled={posting || !newNeed.trim()}
           className="w-full mt-3 btn-gold py-3 rounded-xl font-serif text-lg disabled:opacity-50"
         >
-          {posting ? 'Posting...' : 'Post to the Wall'}
+          {posting ? 'Posting...' : t.post_wall}
         </button>
-        {error && <p className="text-center text-red-400 text-[10px] mt-2 font-bold uppercase tracking-widest">{error}</p>}
+        {(error || fetchError) && <p className="text-center text-red-400 text-[10px] mt-2 font-bold uppercase tracking-widest">{error || fetchError}</p>}
       </form>
 
       <div className="space-y-4">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Pending Needs</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">{t.pending_needs}</h2>
         {loading ? (
           <div className="space-y-4 animate-pulse">
             {[1, 2, 3].map(i => (
@@ -116,7 +131,7 @@ export default function NeedsPage() {
           </div>
         ) : needs.length === 0 ? (
           <div className="text-center py-10 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-2xl">
-             <p className="text-gray-400 italic">The wall is currently empty. Everyone is blessed!</p>
+             <p className="text-gray-400 italic">{t.wall_empty}</p>
           </div>
         ) : (
           needs.map((need) => (
@@ -133,7 +148,7 @@ export default function NeedsPage() {
                   onClick={() => handleCommit(need)}
                   className="bg-ink dark:bg-white/10 text-white dark:text-gold px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-gold hover:text-white dark:hover:bg-gold dark:hover:text-ink transition-all"
                 >
-                  I'm praying for this
+                  {t.praying_for_this}
                 </button>
               </div>
             </div>

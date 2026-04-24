@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import Constellation from '@/components/Constellation'
+import { useLanguage } from '@/lib/LanguageContext'
+import { translations } from '@/lib/translations'
 
 
 
@@ -26,6 +28,8 @@ export default function DashboardPage() {
   const [globalCount, setGlobalCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
+  const { language } = useLanguage()
+  const t = translations[language]
 
   useEffect(() => {
     // 1. Set Daily Quote & Greeting Immediately
@@ -33,9 +37,9 @@ export default function DashboardPage() {
     setDailyQuote(SAINT_QUOTES[dayOfYear % SAINT_QUOTES.length])
 
     const hours = new Date().getHours()
-    if (hours < 12) setGreeting('Peace be with you this morning.')
-    else if (hours < 18) setGreeting('Grace attend you this afternoon.')
-    else setGreeting('A blessed evening to you.')
+    if (hours < 12) setGreeting(t.peace_morning)
+    else if (hours < 18) setGreeting(t.grace_afternoon)
+    else setGreeting(t.blessed_evening)
 
     // 2. Load Async Data
     async function loadData() {
@@ -68,7 +72,7 @@ export default function DashboardPage() {
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
-  }, [])
+  }, [language, t])
 
   if (loading) return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-8 animate-pulse">
@@ -87,10 +91,10 @@ export default function DashboardPage() {
       <div className="text-center mb-12">
         <div className="ornament mb-6"></div>
         <h1 className="font-serif text-4xl font-semibold text-ink dark:text-white mb-6">
-          Welcome, {profile?.display_name || 'Friend'}
+          {t.welcome}, {profile?.display_name || 'Friend'}
         </h1>
         <div className="max-w-lg mx-auto bg-gold/5 dark:bg-gold/10 p-6 rounded-2xl border border-gold/10 relative">
-          <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-parchment dark:bg-parchment-dark px-4 text-gold text-sm">✦ Wisdom ✦</span>
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-parchment dark:bg-parchment-dark px-4 text-gold text-sm">✦ {t.wisdom} ✦</span>
           <p className="font-serif italic text-gold-dark dark:text-gold-light text-xl leading-relaxed">
             "{dailyQuote.text}"
           </p>
@@ -114,17 +118,17 @@ export default function DashboardPage() {
           </p>
           <p className="font-serif text-3xl md:text-4xl text-white dark:text-gray-100 italic">
             {profile?.sparks_received === 0 
-              ? "Your sky is quiet and peaceful." 
-              : "Your constellation is glowing with grace."}
+              ? t.sky_quiet
+              : t.constellation_glowing}
           </p>
           <p className="text-sm text-gold/60 uppercase tracking-[4px] font-bold">
-            {profile?.total_deposited ?? 0} Souls Blessed
+            {profile?.total_deposited ?? 0} {t.souls_blessed}
           </p>
         </div>
 
         {/* Humble Grace Indicator */}
         <div className="absolute bottom-6 right-8 flex items-center gap-2 opacity-40">
-          <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Available Grace:</span>
+          <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">{t.available_grace}:</span>
           <span className="text-sm font-bold text-gold">{profile?.credits ?? 0}</span>
         </div>
       </div>
@@ -133,69 +137,67 @@ export default function DashboardPage() {
       <div className="space-y-3 mb-16">
       {/* Primary Actions */}
       <div className="space-y-3 mb-8">
-        <Link href="/dashboard/needs" className="bg-ink dark:bg-white/5 rounded-xl p-5 flex items-center gap-4 hover:bg-ink/90 dark:hover:bg-white/10 transition-all block border border-gold/10 group hover:scale-[1.01]">
+        <Link href="/dashboard/needs" className="bg-ink dark:bg-white/5 rounded-xl p-5 flex items-center gap-4 hover:bg-ink/90 dark:hover:bg-white/10 transition-all block border border-gold/10 group hover:scale-[1.01] active:scale-95">
           <span className="text-3xl group-hover:scale-110 transition-transform">🕯️</span>
           <div className="flex-1">
-            <p className="font-semibold text-white">The Needs Wall</p>
-            <p className="text-sm text-gray-400">Post a need or pray for a stranger's intention</p>
+            <p className="font-semibold text-white">{t.needs}</p>
+            <p className="text-sm text-gray-400">Ask for prayers from the community</p>
           </div>
           <span className="text-gold text-lg">→</span>
         </Link>
 
-        <Link href="/dashboard/deposit" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-all block hover:scale-[1.01]">
+        <Link href="/dashboard/deposit" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-all block hover:scale-[1.01] active:scale-95">
           <span className="text-3xl">🤲</span>
           <div className="flex-1">
-            <p className="font-semibold text-ink dark:text-white">Share a Prayer</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Share grace from your completed prayers</p>
+            <p className="font-semibold text-ink dark:text-white">{t.share}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Deposit prayers you have completed</p>
           </div>
           <span className="text-gold text-lg">→</span>
         </Link>
 
-        <Link href="/dashboard/withdraw" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-all block hover:scale-[1.01]">
+        <Link href="/dashboard/withdraw" className="card-gold rounded-xl p-5 flex items-center gap-4 hover:bg-amber-50 dark:hover:bg-gold/10 transition-all block hover:scale-[1.01] active:scale-95">
           <span className="text-3xl">📿</span>
           <div className="flex-1">
-            <p className="font-semibold text-ink dark:text-white">Receive a Prayer</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Receive grace from the global treasury</p>
+            <p className="font-semibold text-ink dark:text-white">{t.receive}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Collect prayers for your intentions</p>
           </div>
           <span className="text-gold text-lg">→</span>
         </Link>
       </div>
 
-      {/* Secondary Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-16">
-        <Link href="/dashboard/vault" className="bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all border border-white/5 group">
-          <span className="text-2xl group-hover:scale-110 transition-transform">🏛️</span>
+      {/* Secondary Actions - Fixed Scaling */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-16">
+        <Link href="/dashboard/vault" className="bg-white/5 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3 hover:bg-white/10 transition-all border border-white/5 group active:scale-90">
+          <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🏛️</span>
           <div className="flex-1">
-            <p className="font-semibold text-white text-sm">Grace Vault</p>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Your History</p>
+            <p className="font-semibold text-white text-xs sm:text-sm">{t.vault}</p>
+            <p className="text-[8px] sm:text-[10px] text-gray-500 uppercase tracking-wider font-bold">Records</p>
           </div>
         </Link>
 
-        <Link href="/dashboard/gift" className="bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all border border-white/5 group">
-          <span className="text-2xl group-hover:scale-110 transition-transform">🎁</span>
+        <Link href="/dashboard/gift" className="bg-white/5 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3 hover:bg-white/10 transition-all border border-white/5 group active:scale-90">
+          <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🎁</span>
           <div className="flex-1">
-            <p className="font-semibold text-white text-sm">Gift a Prayer</p>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Send Blessing</p>
+            <p className="font-semibold text-white text-xs sm:text-sm">{t.gift}</p>
+            <p className="text-[8px] sm:text-[10px] text-gray-500 uppercase tracking-wider font-bold">Gift</p>
           </div>
         </Link>
 
-        <Link href="/dashboard/redeem" className="bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all border border-white/5 group">
-          <span className="text-2xl group-hover:scale-110 transition-transform">✨</span>
+        <Link href="/dashboard/redeem" className="bg-white/5 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3 hover:bg-white/10 transition-all border border-white/5 group col-span-2 sm:col-span-1 active:scale-90">
+          <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">✨</span>
           <div className="flex-1">
-            <p className="font-semibold text-white text-sm">Redeem Code</p>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Claim Grace</p>
+            <p className="font-semibold text-white text-xs sm:text-sm">{t.redeem}</p>
+            <p className="text-[8px] sm:text-[10px] text-gray-500 uppercase tracking-wider font-bold">Claim</p>
           </div>
         </Link>
       </div>
-
-
 
       {/* Real-time Treasury Pulse Footer */}
       <div className="text-center py-8 border-t border-gold/10 mt-8">
         <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-gold/20 shadow-inner">
           <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse shadow-[0_0_8px_rgba(212,175,55,1)]"></div>
-          <p className="text-xs text-gray-400 font-serif italic">
-            The Treasury currently holds <span className="text-gold font-bold not-italic px-1">{globalCount}</span> offerings of grace
+          <p className="text-xs text-gray-400 font-serif italic text-balance">
+            {t.treasury_holds} <span className="text-gold font-bold not-italic px-1">{globalCount}</span> {t.offerings_grace}
           </p>
         </div>
       </div>
