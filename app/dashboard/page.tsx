@@ -8,28 +8,6 @@ import { translations } from '@/lib/translations'
 
 
 
-const SAINT_QUOTES = [
-  { text: "Love is the beauty of the soul.", saint: "St. Augustine" },
-  { text: "Let nothing disturb you, let nothing frighten you. All things are passing; God never changes.", saint: "St. Teresa of Avila" },
-  { text: "The world's thy ship and not thy home.", saint: "St. Thérèse of Lisieux" },
-  { text: "He who knows how to forgive prepares for himself many graces from God.", saint: "St. Faustina" },
-  { text: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine" },
-  { text: "Charity is the measure by which Our Lord judges all things.", saint: "St. Padre Pio" },
-  { text: "If you want to find God, look for Him in the poor.", saint: "St. Vincent de Paul" },
-  { text: "The soul is like a castle made of a single diamond.", saint: "St. Teresa of Avila" },
-  { text: "Peace begins with a smile.", saint: "St. Mother Teresa" },
-  { text: "To have a right to do a thing is not at all the same as to be right in doing it.", saint: "G.K. Chesterton" },
-  { text: "The secret of happiness is to live moment by moment and to thank God for all that He, in His goodness, sends to us day after day.", saint: "St. Gianna Molla" },
-  { text: "Hold your eyes on God and leave the doing to Him. That is all the rest you need.", saint: "St. Jane de Chantal" },
-  { text: "Our hearts were made for You, O Lord, and they are restless until they rest in You.", saint: "St. Augustine" },
-  { text: "Be who God meant you to be and you will set the world on fire.", saint: "St. Catherine of Siena" },
-  { text: "Actions speak louder than words; let your words teach and your actions speak.", saint: "St. Anthony of Padua" },
-  { text: "Christ be with me, Christ within me, Christ behind me, Christ before me.", saint: "St. Patrick" },
-  { text: "Apart from the cross, there is no other ladder by which we may get to heaven.", saint: "St. Rose of Lima" },
-  { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", saint: "St. Mother Teresa" },
-  { text: "Preach the Gospel at all times and when necessary use words.", saint: "St. Francis of Assisi" },
-  { text: "He who trusts in himself is lost. He who trusts in God can do all things.", saint: "St. Alphonsus Liguori" }
-]
 
 export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null)
@@ -45,8 +23,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // 1. Set Daily Quote & Greeting Immediately
+    const quotes = t.saint_quotes || []
     const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24))
-    setDailyQuote(SAINT_QUOTES[dayOfYear % SAINT_QUOTES.length])
+    if (quotes.length > 0) {
+      setDailyQuote(quotes[dayOfYear % quotes.length])
+    }
 
     const hours = new Date().getHours()
     if (hours < 12) setGreeting(t.peace_morning)

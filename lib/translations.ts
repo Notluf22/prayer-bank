@@ -105,6 +105,28 @@ export const translations = {
     gift_tag: "Gift",
     claim_tag: "Claim",
     soul_in_need: "A Soul in Need",
+    saint_quotes: [
+      { text: "Love is the beauty of the soul.", saint: "St. Augustine" },
+      { text: "Let nothing disturb you, let nothing frighten you. All things are passing; God never changes.", saint: "St. Teresa of Avila" },
+      { text: "The world's thy ship and not thy home.", saint: "St. Thérèse of Lisieux" },
+      { text: "He who knows how to forgive prepares for himself many graces from God.", saint: "St. Faustina" },
+      { text: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine" },
+      { text: "Charity is the measure by which Our Lord judges all things.", saint: "St. Padre Pio" },
+      { text: "If you want to find God, look for Him in the poor.", saint: "St. Vincent de Paul" },
+      { text: "The soul is like a castle made of a single diamond.", saint: "St. Teresa of Avila" },
+      { text: "Peace begins with a smile.", saint: "St. Mother Teresa" },
+      { text: "To have a right to do a thing is not at all the same as to be right in doing it.", saint: "G.K. Chesterton" },
+      { text: "The secret of happiness is to live moment by moment and to thank God for all that He, in His goodness, sends to us day after day.", saint: "St. Gianna Molla" },
+      { text: "Hold your eyes on God and leave the doing to Him. That is all the rest you need.", saint: "St. Jane de Chantal" },
+      { text: "Our hearts were made for You, O Lord, and they are restless until they rest in You.", saint: "St. Augustine" },
+      { text: "Be who God meant you to be and you will set the world on fire.", saint: "St. Catherine of Siena" },
+      { text: "Actions speak louder than words; let your words teach and your actions speak.", saint: "St. Anthony of Padua" },
+      { text: "Christ be with me, Christ within me, Christ behind me, Christ before me.", saint: "St. Patrick" },
+      { text: "Apart from the cross, there is no other ladder by which we may get to heaven.", saint: "St. Rose of Lima" },
+      { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", saint: "St. Mother Teresa" },
+      { text: "Preach the Gospel at all times and when necessary use words.", saint: "St. Francis of Assisi" },
+      { text: "He who trusts in himself is lost. He who trusts in God can do all things.", saint: "St. Alphonsus Liguori" }
+    ]
   },
   ml: {
     welcome: "സ്വാഗതം",
@@ -212,6 +234,28 @@ export const translations = {
     gift_tag: "സമ്മാനം",
     claim_tag: "സ്വീകരിക്കുക",
     soul_in_need: "സഹായം ആവശ്യമുള്ള ഒരാൾ",
+    saint_quotes: [
+      { text: "സ്നേഹം ആത്മാവിന്റെ സൗന്ദര്യമാണ്.", saint: "വിശുദ്ധ അഗസ്റ്റിൻ" },
+      { text: "ഒന്നിനും നിങ്ങളെ അലട്ടാൻ അനുവദിക്കരുത്, ഒന്നിനെയും ഭയപ്പെടരുത്. എല്ലാം കടന്നുപോകുന്നു; ദൈവം ഒരിക്കലും മാറുന്നില്ല.", saint: "അവിലയിലെ വിശുദ്ധ തെരേസ" },
+      { text: "ലോകം നിന്റെ കപ്പലാണ്, നിന്റെ വീടല്ല.", saint: "ലിസ്യൂവിലെ വിശുദ്ധ കൊച്ചുത്രേസ്യ" },
+      { text: "ക്ഷമിക്കാൻ അറിയുന്നവൻ ദൈവത്തിൽ നിന്ന് അനേകം കൃപകൾ തനിക്കായി ഒരുക്കുന്നു.", saint: "വിശുദ്ധ ഫൗസ്റ്റീന" },
+      { text: "എല്ലാം ദൈവത്തെ ആശ്രയിച്ചിരിക്കുന്നു എന്നതുപോലെ പ്രാർത്ഥിക്കുക. എല്ലാം നിങ്ങളെ ആശ്രയിച്ചിരിക്കുന്നു എന്നതുപോലെ പ്രവർത്തിക്കുക.", saint: "വിശുദ്ധ അഗസ്റ്റിൻ" },
+      { text: "ജീവകാരുണ്യമാണ് നമ്മുടെ കർത്താവ് എല്ലാ കാര്യങ്ങളും വിധിക്കുന്ന അളവുകോൽ.", saint: "വിശുദ്ധ പാദ്രെ പിയോ" },
+      { text: "നിങ്ങൾക്ക് ദൈവത്തെ കണ്ടെത്തണമെന്നുണ്ടെങ്കിൽ, ദരിദ്രരിൽ അവനെ അന്വേഷിക്കുക.", saint: "വിശുദ്ധ വിൻസെന്റ് ഡി പോൾ" },
+      { text: "ആത്മാവ് ഒരൊറ്റ വജ്രം കൊണ്ട് നിർമ്മിച്ച ഒരു കൊട്ടാരം പോലെയാണ്.", saint: "അവിലയിലെ വിശുദ്ധ തെരേസ" },
+      { text: "സമാധാനം ഒരു പുഞ്ചിരിയിൽ തുടങ്ങുന്നു.", saint: "വിശുദ്ധ മദർ തെരേസ" },
+      { text: "ഒരു കാര്യം ചെയ്യാൻ അവകാശമുണ്ട് എന്നത് അത് ചെയ്യുന്നത് ശരിയാണ് എന്നതിന് തുല്യമല്ല.", saint: "ജി.കെ. ചെസ്റ്റർട്ടൺ" },
+      { text: "സന്തോഷത്തിന്റെ രഹസ്യം ഓരോ നിമിഷവും ജീവിക്കുക എന്നതും ദൈവം തന്റെ നന്മയിൽ ഓരോ ദിവസവും നമുക്ക് അയച്ചുതരുന്ന എല്ലാത്തിനും നന്ദി പറയുക എന്നതുമാണ്.", saint: "വിശുദ്ധ ജിയന്ന മോള" },
+      { text: "നിങ്ങളുടെ കണ്ണുകൾ ദൈവത്തിൽ ഉറപ്പിക്കുക, ബാക്കിയുള്ളവ അവന് വിട്ടുകൊടുക്കുക. നിങ്ങൾക്ക് വേണ്ട ഒരേയൊരു വിശ്രമം അതാണ്.", saint: "വിശുദ്ധ ജെയ്ൻ ഡി ചന്തൽ" },
+      { text: "കർത്താവേ, ഞങ്ങളുടെ ഹൃദയങ്ങൾ അങ്ങേയ്ക്കായി സൃഷ്ടിക്കപ്പെട്ടതാണ്, അങ്ങയിൽ വിശ്രമിക്കുന്നത് വരെ അവ അസ്വസ്ഥമായിരിക്കും.", saint: "വിശുദ്ധ അഗസ്റ്റിൻ" },
+      { text: "ദൈവം നിങ്ങൾ ആരാകാനാണോ ആഗ്രഹിച്ചത് അത് ആകുക, അപ്പോൾ നിങ്ങൾ ലോകത്തിന് തീ കൊളുത്തും.", saint: "സിയന്നയിലെ വിശുദ്ധ കാതറിൻ" },
+      { text: "പ്രവൃത്തികൾ വാക്കുകളേക്കാൾ ഉച്ചത്തിൽ സംസാരിക്കുന്നു; നിങ്ങളുടെ വാക്കുകൾ പഠിപ്പിക്കട്ടെ, പ്രവൃത്തികൾ സംസാരിക്കട്ടെ.", saint: "പാദുവയിലെ വിശുദ്ധ അന്തോണീസ്" },
+      { text: "ക്രിസ്തു എന്നോടൊപ്പമുണ്ടാകട്ടെ, ക്രിസ്തു എന്നിലുണ്ടാകട്ടെ, ക്രിസ്തു എന്റെ പിന്നിലും എന്റെ മുന്നിലുമുണ്ടാകട്ടെ.", saint: "വിശുദ്ധ പാട്രിക്" },
+      { text: "കുരിശല്ലാതെ സ്വർഗത്തിലേക്ക് പോകാൻ മറ്റൊരു ഗോവണിയുമില്ല.", saint: "ലിമയിലെ വിശുദ്ധ റോസ്" },
+      { text: "നിങ്ങൾ പോകുന്നിടത്തെല്ലാം സ്നേഹം പ്രചരിപ്പിക്കുക. സന്തോഷമില്ലാതെ ഒരാളും നിങ്ങളുടെ അടുക്കൽ നിന്ന് മടങ്ങിപ്പോകരുത്.", saint: "വിശുദ്ധ മദർ തെരേസ" },
+      { text: "എല്ലാ സമയത്തും സുവിശേഷം പ്രസംഗിക്കുക, ആവശ്യമുണ്ടെങ്കിൽ മാത്രം വാക്കുകൾ ഉപയോഗിക്കുക.", saint: "അസീസിയിലെ വിശുദ്ധ ഫ്രാൻസിസ്" },
+      { text: "തന്നിൽ വിശ്വസിക്കുന്നവൻ നഷ്ടപ്പെട്ടുപോകുന്നു. ദൈവത്തിൽ വിശ്വസിക്കുന്നവന് എല്ലാം ചെയ്യാൻ കഴിയും.", saint: "വിശുദ്ധ അൽഫോൺസസ് ലിഗോരി" }
+    ]
   }
 }
 
