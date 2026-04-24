@@ -2,7 +2,12 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Prayer, PRAYER_TYPES } from '@/lib/types'
+import { useLanguage } from '@/lib/LanguageContext'
+import { translations } from '@/lib/translations'
+
 export default function WithdrawPage() {
+  const { language } = useLanguage()
+  const t = translations[language]
   const [credits, setCredits] = useState(0)
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [drawing, setDrawing] = useState(false)
@@ -62,11 +67,12 @@ export default function WithdrawPage() {
     }
   }
 
+  const trackingClass = language === 'ml' ? '' : 'tracking-widest'
 
   if (loadingInitial) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-400 font-serif italic">Loading your treasury...</p>
+        <p className="text-gray-400 font-serif italic">{t.welcome}...</p>
       </div>
     )
   }
@@ -74,16 +80,16 @@ export default function WithdrawPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Receive a Prayer</h1>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">{t.receive_prayer}</h1>
         <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">
-          You have <strong>{credits}</strong> credit{credits !== 1 ? 's' : ''}
+          {t.available_grace}: <strong>{credits}</strong> {t.credits}
         </p>
       </div>
 
       {drawing && (
-        <div className="text-center py-20 flex flex-col items-center justify-center space-y-4">
+        <div className="text-center py-20 flex flex-col items-center justify-center space-y-4 animate-in fade-in zoom-in">
           <div className="text-5xl animate-bounce">✨</div>
-          <p className="font-serif italic text-xl text-ink dark:text-white">Seeking grace for you...</p>
+          <p className="font-serif italic text-xl text-ink dark:text-white">{t.withdrawing_grace}</p>
         </div>
       )}
 
@@ -92,11 +98,11 @@ export default function WithdrawPage() {
           {PRAYER_TYPES.map(p => {
             const canAfford = credits >= p.creditValue
             return (
-              <div key={p.id} className="card-gold rounded-xl p-5 flex flex-col relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+              <div key={p.id} className="card-gold rounded-xl p-5 flex flex-col relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 group active:scale-[0.98]">
                 <div className="flex justify-between items-start mb-4">
-                  <span className="text-4xl">{p.emoji}</span>
+                  <span className="text-4xl group-hover:scale-110 transition-transform">{p.emoji}</span>
                   <span className="text-xs font-bold text-gray-500 bg-gray-100 dark:bg-white/10 dark:text-gray-300 px-3 py-1 rounded-full">
-                    {p.creditValue} credit{p.creditValue !== 1 ? 's' : ''}
+                    {p.creditValue} {t.credits}
                   </span>
                 </div>
                 <h3 className="font-serif text-xl font-semibold text-ink dark:text-white mb-1">{p.name}</h3>
@@ -105,13 +111,13 @@ export default function WithdrawPage() {
                 <button
                   onClick={() => handleDraw(p.id, p.creditValue)}
                   disabled={!canAfford}
-                  className={`w-full py-3 rounded-xl font-bold uppercase tracking-wider text-sm transition-all ${
+                  className={`w-full py-3 rounded-xl font-bold uppercase tracking-wider text-sm transition-all active:scale-95 hover:scale-[1.02] hover:shadow-lg ${
                     canAfford
                       ? 'btn-gold shadow-md'
                       : 'bg-gray-100 text-gray-400 dark:bg-white/5 dark:text-gray-600 cursor-not-allowed'
                   }`}
                 >
-                  Receive this Prayer
+                  {t.receive_prayer}
                 </button>
               </div>
             )
@@ -120,9 +126,9 @@ export default function WithdrawPage() {
       )}
 
       {!drawing && drawnPrayer && (
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md mx-auto animate-in fade-in slide-in-from-bottom duration-500">
           <div className="text-center mb-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-gold mb-2">You drew a</p>
+            <p className={`text-xs font-bold uppercase ${trackingClass} text-gold mb-2`}>{t.prayer_received}</p>
             <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white flex items-center justify-center gap-2">
               {PRAYER_TYPES.find(p => p.id === drawnPrayer.type)?.emoji} 
               {PRAYER_TYPES.find(p => p.id === drawnPrayer.type)?.name}
@@ -134,8 +140,8 @@ export default function WithdrawPage() {
             
             {drawnPrayer.intention && (
               <div className="mb-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Intention of the Giver</p>
-                <p className="font-serif italic text-xl text-ink dark:text-gray-100 leading-relaxed">
+                <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-3`}>{t.special_intention}</p>
+                <p className="font-serif italic text-xl text-ink dark:text-gray-100 leading-relaxed text-balance">
                   "{drawnPrayer.intention}"
                 </p>
               </div>
@@ -153,16 +159,16 @@ export default function WithdrawPage() {
             <button
               onClick={handleKeep}
               disabled={withdrawing}
-              className="w-full btn-gold py-4 rounded-xl font-bold uppercase tracking-wider shadow-lg flex items-center justify-center gap-2"
+              className="w-full btn-gold py-4 rounded-xl font-bold uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform hover:scale-[1.02] hover:shadow-xl"
             >
-              {withdrawing ? 'Receiving...' : 'Receive Grace'}
+              {withdrawing ? t.withdrawing_grace : t.withdraw_btn}
             </button>
             <button
               onClick={() => setDrawnPrayer(null)}
               disabled={withdrawing}
-              className="w-full mt-4 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+              className="w-full mt-4 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors active:scale-95 hover:underline"
             >
-              Return to bank
+              {t.back_to_dashboard}
             </button>
           </div>
         </div>

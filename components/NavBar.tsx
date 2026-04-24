@@ -31,6 +31,9 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
     { href: '/dashboard/redeem', label: '✨', title: t.redeem, mobile: false },
   ]
 
+  const trackingClass = language === 'ml' ? '' : 'tracking-widest'
+  const trackingTighterClass = language === 'ml' ? '' : 'tracking-tighter'
+
   return (
     <nav className="border-b border-gold/10 bg-white/70 dark:bg-ink/70 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-16 md:h-20">
@@ -75,7 +78,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
               }`}
             >
               <span className="text-xl sm:text-2xl">{l.label}</span>
-              <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter sm:tracking-widest mt-0.5">{l.title}</span>
+              <span className={`text-[8px] sm:text-[10px] font-bold uppercase ${trackingTighterClass} sm:${trackingClass} mt-0.5`}>{l.title}</span>
             </Link>
           ))}
         </div>

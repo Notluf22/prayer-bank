@@ -2,14 +2,18 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { PRAYER_TYPES } from '@/lib/types'
+import { useLanguage } from '@/lib/LanguageContext'
+import { translations } from '@/lib/translations'
 
 const BUNDLES = [
-  { credits: 5,  label: 'Small Blessing',  description: 'Enough for 5 Hail Marys or 1 Divine Mercy' },
-  { credits: 15, label: 'Rosary Bundle',   description: 'Enough for 3 full Rosaries' },
-  { credits: 30, label: '3 Holy Mass',     description: 'Enough for 3 Holy Mass prayers' },
+  { id: 'small', credits: 5,  label: 'Small Blessing',  description: 'Enough for 5 Hail Marys or 1 Divine Mercy' },
+  { id: 'medium', credits: 15, label: 'Rosary Bundle',   description: 'Enough for 3 full Rosaries' },
+  { id: 'large', credits: 30, label: '3 Holy Mass',     description: 'Enough for 3 Holy Mass prayers' },
 ]
 
 export default function GiftPage() {
+  const { language } = useLanguage()
+  const t = translations[language]
   const searchParams = useSearchParams()
   const [mode, setMode] = useState<'credits' | 'prayer'>('credits')
   const initialMessage = searchParams.get('message') || ''
@@ -80,24 +84,26 @@ export default function GiftPage() {
     }
   }
 
+  const trackingClass = language === 'ml' ? '' : 'tracking-widest'
+
   if (result) return (
-    <div className="text-center py-10">
+    <div className="text-center py-10 animate-in fade-in zoom-in duration-500">
       <p className="text-5xl mb-4">🎁</p>
-      <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">Gift Card Created!</h2>
+      <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">{t.gift_sent}</h2>
       <p className="text-gray-500 dark:text-gray-400 mb-6">
-        Share the link below with your friend.
+        {t.gift_sent_desc}
       </p>
       <div className="card-gold rounded-xl p-5 mb-6 text-left">
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Gift code</p>
+        <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-2`}>Gift code</p>
         <p className="font-mono text-lg font-bold text-ink dark:text-white tracking-wider">{result.code}</p>
-        <p className="text-[10px] text-gray-400 mt-4 mb-2 uppercase tracking-widest font-bold">Shareable link</p>
+        <p className={`text-[10px] text-gray-400 mt-4 mb-2 uppercase ${trackingClass} font-bold`}>Shareable link</p>
         <p className="text-sm text-blue-600 dark:text-blue-400 break-all">{result.shareUrl}</p>
         <div className="flex gap-2 mt-4">
           <button
             onClick={() => { navigator.clipboard.writeText(result.shareUrl); alert('Link copied!') }}
-            className="flex-1 text-xs border border-gray-200 dark:border-gray-700 py-3 rounded-lg hover:border-gold dark:hover:border-gold dark:text-gray-300"
+            className="flex-1 text-xs border border-gray-200 dark:border-gray-700 py-3 rounded-lg hover:border-gold dark:hover:border-gold dark:text-gray-300 active:scale-95 transition-transform"
           >
-            Copy link
+            {t.copy_code}
           </button>
           <a
             href={`https://wa.me/?text=${encodeURIComponent(
@@ -107,14 +113,14 @@ export default function GiftPage() {
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 text-xs border border-[#25D366] text-[#25D366] py-3 rounded-lg hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center gap-1"
+            className="flex-1 text-xs border border-[#25D366] text-[#25D366] py-3 rounded-lg hover:bg-[#25D366] hover:text-white transition-colors flex items-center justify-center gap-1 active:scale-95 transition-transform"
           >
             WhatsApp
           </a>
         </div>
       </div>
-      <button onClick={() => { setResult(null); setMessage('') }} className="btn-gold px-6 py-2 rounded-xl font-serif">
-        Create another gift
+      <button onClick={() => { setResult(null); setMessage('') }} className="btn-gold px-6 py-2 rounded-xl font-serif active:scale-95 transition-transform hover:scale-105 hover:shadow-lg">
+        {t.share_another}
       </button>
     </div>
   )
@@ -122,41 +128,41 @@ export default function GiftPage() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">Gift a Prayer</h1>
-        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">Send a blessing from the global treasury</p>
+        <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">{t.gift_prayer}</h1>
+        <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">{t.gift_desc}</p>
       </div>
 
       <div className="flex gap-1 bg-gray-100 dark:bg-white/5 p-1 rounded-xl mb-8 border border-gray-200/50 dark:border-white/5">
         <button
           onClick={() => setMode('credits')}
-          className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
+          className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all active:scale-95 ${
             mode === 'credits' ? 'bg-white dark:bg-white/10 text-gold shadow-sm' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
           }`}
         >
-          Gift a Blessing
+          {t.credits}
         </button>
         <button
           onClick={() => setMode('prayer')}
-          className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
+          className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all active:scale-95 ${
             mode === 'prayer' ? 'bg-white dark:bg-white/10 text-gold shadow-sm' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
           }`}
         >
-          Gift a Prayer
+          {t.prayer}
         </button>
       </div>
 
       <form onSubmit={handleSend} className="space-y-6">
         {mode === 'credits' ? (
           <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-3">Choose a Bundle</label>
+            <label className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 block mb-3`}>{t.gift_type}</label>
             <div className="space-y-2">
               {BUNDLES.map(b => (
                 <button
-                  key={b.credits}
+                  key={b.id}
                   type="button"
                   onClick={() => setSelectedBundle(b)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl border text-left transition-all ${
-                    selectedBundle.credits === b.credits
+                  className={`w-full flex items-center gap-4 p-4 rounded-xl border text-left transition-all active:scale-[0.98] hover:scale-[1.02] hover:shadow-md ${
+                    selectedBundle.id === b.id
                       ? 'border-gold bg-amber-50 dark:bg-gold/10'
                       : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 hover:border-gold/50 dark:hover:border-gold/50'
                   }`}
@@ -172,14 +178,14 @@ export default function GiftPage() {
           </div>
         ) : (
           <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-3">Select Prayer Type</label>
+            <label className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 block mb-3`}>{t.prayer_type_completed}</label>
             <div className="grid grid-cols-2 gap-2">
               {PRAYER_TYPES.map(p => (
                 <button
                   key={p.id}
                   type="button"
                   onClick={() => setSelectedPrayerType(p)}
-                  className={`flex flex-col gap-1 p-4 rounded-xl border text-left transition-all ${
+                  className={`flex flex-col gap-1 p-4 rounded-xl border text-left transition-all active:scale-95 hover:scale-[1.02] hover:shadow-md group ${
                     selectedPrayerType.id === p.id
                       ? 'border-gold bg-amber-50 dark:bg-gold/10'
                       : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 hover:border-gold/50 dark:hover:border-gold/50'
@@ -187,20 +193,20 @@ export default function GiftPage() {
                 >
                   <span className="text-3xl mb-1">{p.emoji}</span>
                   <p className="font-bold text-ink dark:text-white text-xs uppercase tracking-wider">{p.name}</p>
-                  <p className="text-[10px] text-gold">{p.creditValue} credits</p>
+                  <p className="text-[10px] text-gold">{p.creditValue} {t.credits}</p>
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-gray-400 mt-4 italic">We will draw a random prayer of this type from the global bank to gift.</p>
+            <p className="text-[10px] text-gray-400 mt-4 italic">{t.share_merit_desc}</p>
           </div>
         )}
 
         <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-2">Personal Message</label>
+          <label className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 block mb-2`}>{t.gift_message}</label>
           <textarea
             value={message}
             onChange={e => setMessage(e.target.value)}
-            placeholder="e.g. Praying for you during this difficult time…"
+            placeholder="..."
             rows={3}
             className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold dark:bg-white/5 dark:text-white bg-white resize-none"
           />
@@ -209,9 +215,9 @@ export default function GiftPage() {
         <button
           type="submit"
           disabled={loading}
-          className="btn-gold w-full font-serif text-lg py-4 rounded-xl disabled:opacity-50 shadow-lg"
+          className="btn-gold w-full font-serif text-lg py-4 rounded-xl disabled:opacity-50 shadow-lg active:scale-[0.98] transition-transform hover:scale-[1.01] hover:shadow-xl"
         >
-          {loading ? 'Creating gift…' : '✦ Create Gift Card ✦'}
+          {loading ? t.sending_gift : t.send_gift_btn}
         </button>
       </form>
     </div>
