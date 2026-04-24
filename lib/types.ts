@@ -7,7 +7,7 @@ export type PrayerType = {
 }
 
 export const PRAYER_TYPES: PrayerType[] = [
-  { id: 'hail_mary',    name: 'Hail Mary',     emoji: '🌹', creditValue: 1,  description: 'A single Hail Mary' },
+  { id: 'hail_mary',    name: 'Hail Mary',     emoji: '🌹', creditValue: 0.1,  description: 'A single Hail Mary' },
   { id: 'our_father',   name: 'Our Father',    emoji: '🙏', creditValue: 1,  description: 'The Lord\'s Prayer' },
   { id: 'divine_mercy', name: 'Divine Mercy',  emoji: '🕊', creditValue: 3,  description: 'Chaplet of Divine Mercy' },
   { id: 'holy_rosary',  name: 'Holy Rosary',   emoji: '📿', creditValue: 5,  description: 'The full Holy Rosary' },
