@@ -101,7 +101,7 @@ export default function GlobalMap({ recentPrayers }: { recentPrayers: any[] }) {
       ))}
 
       <div className="absolute bottom-3 right-4 flex items-center gap-2 opacity-50">
-        <div className="w-1 h-1 bg-gold rounded-full animate-pulse"></div>
+        <div className="w-1 h-1 bg-gold rounded-full animate-pulse-subtle"></div>
         <p className="text-[8px] text-gray-500 uppercase tracking-widest">Global Activity</p>
       </div>
     </div>

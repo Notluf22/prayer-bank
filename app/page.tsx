@@ -34,7 +34,7 @@ export default function LandingPage() {
         <div className="pt-8">
           <Link 
             href="/auth" 
-            className="btn-gold inline-flex items-center justify-center font-serif text-lg py-4 px-8 rounded-xl hover:scale-105 transition-transform"
+            className="btn-gold inline-flex items-center justify-center font-serif text-lg py-4 px-8 rounded-xl hover:scale-105 transition-transform animate-pulse-subtle"
           >
             ✦ Enter the Sanctuary ✦
           </Link>

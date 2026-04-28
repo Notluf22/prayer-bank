@@ -19,7 +19,6 @@ export async function GET(request: Request) {
     .select('*, depositor:profiles!depositor_id(display_name, country)')
     .eq('status', 'available')
     .eq('type', type)
-    .neq('depositor_id', user.id)
     .limit(50)
 
   if (error) {

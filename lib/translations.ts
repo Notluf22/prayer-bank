@@ -126,7 +126,15 @@ export const translations = {
       { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", saint: "St. Mother Teresa" },
       { text: "Preach the Gospel at all times and when necessary use words.", saint: "St. Francis of Assisi" },
       { text: "He who trusts in himself is lost. He who trusts in God can do all things.", saint: "St. Alphonsus Liguori" }
-    ]
+    ],
+    prayer_texts: {
+      hail_mary: "Hail Mary, full of grace, the Lord is with thee; blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.",
+      our_father: "Our Father, Who art in heaven, hallowed be Thy name; Thy kingdom come; Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. Amen.",
+      divine_mercy: "For the sake of His sorrowful Passion, have mercy on us and on the whole world.",
+      holy_rosary: "Take a few moments to recite the Holy Rosary.",
+      adoration: "Take a moment to adore the Lord in the Blessed Sacrament.",
+      holy_mass: "Participate in the Holy Mass and offer your prayers."
+    }
   },
   ml: {
     welcome: "സ്വാഗതം",
@@ -255,7 +263,15 @@ export const translations = {
       { text: "നിങ്ങൾ പോകുന്നിടത്തെല്ലാം സ്നേഹം പ്രചരിപ്പിക്കുക. സന്തോഷമില്ലാതെ ഒരാളും നിങ്ങളുടെ അടുക്കൽ നിന്ന് മടങ്ങിപ്പോകരുത്.", saint: "വിശുദ്ധ മദർ തെരേസ" },
       { text: "എല്ലാ സമയത്തും സുവിശേഷം പ്രസംഗിക്കുക, ആവശ്യമുണ്ടെങ്കിൽ മാത്രം വാക്കുകൾ ഉപയോഗിക്കുക.", saint: "അസീസിയിലെ വിശുദ്ധ ഫ്രാൻസിസ്" },
       { text: "തന്നിൽ വിശ്വസിക്കുന്നവൻ നഷ്ടപ്പെട്ടുപോകുന്നു. ദൈവത്തിൽ വിശ്വസിക്കുന്നവന് എല്ലാം ചെയ്യാൻ കഴിയും.", saint: "വിശുദ്ധ അൽഫോൺസസ് ലിഗോരി" }
-    ]
+    ],
+    prayer_texts: {
+      hail_mary: "നന്മ നിറഞ്ഞ മറിയമേ സ്വസ്തി, കർത്താവ് അങ്ങയോടുകൂടെ, സ്ത്രീകളിൽ അങ്ങ് അനുഗ്രഹിക്കപ്പെട്ടവളാകുന്നു, അങ്ങയുടെ ഉദരത്തിൻ ഫലമായ ഈശോ അനുഗ്രഹിക്കപ്പെട്ടവനാകുന്നു. പരിശുദ്ധ മറിയമേ തമ്പുരാന്റെ അമ്മേ, പാപികളായ ഞങ്ങൾക്കുവേണ്ടി ഇപ്പോഴും ഞങ്ങളുടെ മരണസമയത്തും തമ്പുരാനോട് അപേക്ഷിച്ചു കൊള്ളണമേ. ആമ്മേൻ.",
+      our_father: "സ്വർഗ്ഗസ്ഥനായ ഞങ്ങളുടെ പിതാവേ, അങ്ങയുടെ നാമം പൂജിതമാകണമേ, അങ്ങയുടെ രാജ്യം വരണമേ, അങ്ങയുടെ തിരുമനസ്സ് സ്വർഗ്ഗത്തിലെപ്പോലെ ഭൂമിയിലുമാകണമേ. അന്നന്നുവേണ്ട ആഹാരം ഇന്ന് ഞങ്ങൾക്ക് തരണമേ, ഞങ്ങളോട് തെറ്റുചെയ്യുന്നവരോട് ഞങ്ങൾ ക്ഷമിക്കുന്നതുപോലെ ഞങ്ങളുടെ തെറ്റുകൾ ഞങ്ങളോടും ക്ഷമിക്കണമേ. ഞങ്ങളെ പ്രലോഭനത്തിൽ ഉൾപ്പെടുത്തരുതേ, തിന്മയിൽ നിന്നും ഞങ്ങളെ രക്ഷിക്കണമേ. ആമ്മേൻ.",
+      divine_mercy: "ഈശോയുടെ അതിദാരുണമായ പീഡാസഹനങ്ങളെക്കുറിച്ച്, ഞങ്ങളുടെമേലും ലോകം മുഴുവന്റെമേലും കരുണയായിരിക്കണമേ.",
+      holy_rosary: "പരിശുദ്ധ ജപമാല ചൊല്ലാൻ അല്പസമയം ചെലവഴിക്കുക.",
+      adoration: "പരിശുദ്ധ കുർബാനയിൽ ഈശോയെ ആരാധിക്കാൻ അല്പസമയം ചെലവഴിക്കുക.",
+      holy_mass: "വിശുദ്ധ കുർബാനയിൽ പങ്കെടുത്ത് നിങ്ങളുടെ പ്രാർത്ഥനകൾ അർപ്പിക്കുക."
+    }
   }
 }
 

@@ -19,6 +19,19 @@ export async function POST(request: Request) {
     .eq('id', user.id)
     .single()
 
+  let prayerStatus = 'available'
+  let withdrawnBy = null
+  let needUserId = null
+
+  if (needId) {
+    const { data: need } = await supabase.from('needs').select('user_id').eq('id', needId).single()
+    if (need) {
+      needUserId = need.user_id
+      prayerStatus = 'withdrawn'
+      withdrawnBy = need.user_id
+    }
+  }
+
   // Insert prayer
   const { data: newPrayer, error: prayerError } = await supabase.from('prayers').insert({
     depositor_id: user.id,
@@ -26,7 +39,8 @@ export async function POST(request: Request) {
     intention: intention || null,
     offered_for: offeredFor,
     credit_value: creditValue,
-    status: 'available',
+    status: prayerStatus,
+    withdrawn_by: withdrawnBy,
     country: profile?.country ?? null,
   }).select().single()
   if (prayerError) return NextResponse.json({ error: prayerError.message }, { status: 500 })

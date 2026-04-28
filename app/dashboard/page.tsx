@@ -186,7 +186,7 @@ export default function DashboardPage() {
       {/* Real-time Treasury Pulse Footer */}
       <div className="text-center py-8 border-t border-gold/10 mt-8">
         <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-gold/20 shadow-inner">
-          <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse shadow-[0_0_8px_rgba(212,175,55,1)]"></div>
+          <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse-subtle shadow-[0_0_8px_rgba(212,175,55,1)]"></div>
           <p className="text-xs text-gray-400 font-serif italic text-balance">
             {t.treasury_holds} <span className="text-gold font-bold not-italic px-1">{globalCount}</span> {t.offerings_grace}
           </p>

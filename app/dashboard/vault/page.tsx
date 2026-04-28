@@ -20,29 +20,23 @@ export default function VaultPage() {
       if (!user) return
 
       // Parallel fetch given and received grace
-      const [givenRes, transRes] = await Promise.all([
+      const [givenRes, receivedRes] = await Promise.all([
         supabase
           .from('prayers')
           .select('*')
           .eq('depositor_id', user.id)
           .order('created_at', { ascending: false }),
         supabase
-          .from('transactions')
-          .select(`
-            prayer:prayers (
-              *,
-              depositor:profiles!depositor_id(display_name, country)
-            )
-          `)
-          .eq('user_id', user.id)
-          .eq('type', 'withdraw')
+          .from('prayers')
+          .select('*, depositor:profiles!depositor_id(display_name, country)')
+          .eq('withdrawn_by', user.id)
           .order('created_at', { ascending: false })
       ])
 
-      const received = transRes.data?.map(t => t.prayer).filter(Boolean) as any[]
+      const received = receivedRes.data ?? []
       
       setGivenPrayers(givenRes.data ?? [])
-      setReceivedPrayers(received ?? [])
+      setReceivedPrayers(received)
       setLoading(false)
     }
     load()

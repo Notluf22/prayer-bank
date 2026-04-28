@@ -100,9 +100,13 @@ export default function DepositPage() {
           </div>
         </div>
 
-        {/* Info box */}
-        <div className="p-4 bg-amber-50 dark:bg-gold/10 rounded-xl border border-gold/20">
-          <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+        {/* Info box & Prayer Text */}
+        <div className="p-5 bg-amber-50 dark:bg-gold/10 rounded-xl border border-gold/20 space-y-3">
+          <p className="font-serif text-lg text-ink dark:text-white leading-relaxed text-center italic">
+            "{t.prayer_texts?.[selectedType.id as keyof typeof t.prayer_texts] || selectedType.description}"
+          </p>
+          <div className="w-12 h-px bg-gold/30 mx-auto"></div>
+          <p className="text-xs text-center text-gray-600 dark:text-gray-400 italic">
             {t.share_merit_desc}
           </p>
         </div>

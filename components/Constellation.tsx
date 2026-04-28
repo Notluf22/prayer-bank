@@ -22,7 +22,7 @@ export default function Constellation({ sparks }: { sparks: number }) {
       {stars.map((star) => (
         <div
           key={star.id}
-          className="absolute rounded-full bg-gold animate-pulse"
+          className="absolute rounded-full bg-gold animate-pulse-subtle"
           style={{
             left: `${star.x}%`,
             top: `${star.y}%`,
