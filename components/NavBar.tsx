@@ -125,7 +125,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden xs:flex flex-col items-end mr-1">
+          <div className="flex flex-col items-end mr-1 sm:mr-3">
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">{t.grace}</span>
             <span className="text-xs font-bold text-gold leading-none">{profile?.credits ?? 0}</span>
           </div>

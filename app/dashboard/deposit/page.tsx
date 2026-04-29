@@ -47,10 +47,20 @@ export default function DepositPage() {
   const trackingClass = language === 'ml' ? '' : 'tracking-widest'
 
   if (done) return (
-    <div className="text-center py-16 animate-in fade-in zoom-in duration-500">
+    <div className="text-center py-10 animate-in fade-in zoom-in duration-500">
       <p className="text-5xl mb-4">🤲</p>
       <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">{t.prayer_shared}</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-2">{t.shared_grace_earned} <strong>+{selectedType.creditValue} {t.credits}</strong></p>
+      <p className="text-gray-500 dark:text-gray-400 mb-6">{t.shared_grace_earned} <strong>+{selectedType.creditValue} {t.credits}</strong></p>
+      
+      <div className="p-6 bg-white/50 dark:bg-white/5 rounded-2xl border border-gold/20 shadow-lg mb-8 relative overflow-hidden mx-auto max-w-md">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"></div>
+        <p className="text-3xl mb-3">{selectedType.emoji}</p>
+        <p className={`text-xs font-bold uppercase ${trackingClass} text-gold mb-3`}>{selectedType.name}</p>
+        <p className="font-serif text-xl text-ink dark:text-white leading-relaxed italic text-balance">
+          "{t.prayer_texts?.[selectedType.id as keyof typeof t.prayer_texts] || selectedType.description}"
+        </p>
+      </div>
+
       <p className="font-serif italic text-gray-400 mb-8 max-w-sm mx-auto">{t.shared_treasury_desc}</p>
       <div className="flex gap-3 justify-center">
         <button onClick={() => setDone(false)} className="btn-gold px-6 py-2 rounded-xl font-serif active:scale-95 transition-transform hover:scale-105 hover:shadow-lg">{t.share_another}</button>

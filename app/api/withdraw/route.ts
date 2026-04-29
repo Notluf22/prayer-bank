@@ -53,10 +53,7 @@ export async function POST(request: Request) {
   })
 
   // Increment sparks_received for the depositor (The Constellation logic)
-  await supabase
-    .from('profiles')
-    .update({ sparks_received: (await supabase.from('profiles').select('sparks_received').eq('id', prayer.depositor_id).single()).data?.sparks_received + 1 })
-    .eq('id', prayer.depositor_id)
+  await supabase.rpc('increment_sparks', { user_id: prayer.depositor_id })
 
   revalidatePath('/dashboard')
   return NextResponse.json({ success: true })
