@@ -21,9 +21,6 @@ export default function DepositPage() {
     e.preventDefault()
     setLoading(true)
     
-    // Optimistic UI: Transition to "Done" state immediately
-    setDone(true)
-    
     fetch('/api/deposit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,11 +31,16 @@ export default function DepositPage() {
         creditValue: selectedType.creditValue,
         needId: needId
       }),
-    }).then(() => {
+    }).then(async (res) => {
       setLoading(false)
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert(err.error || 'Something went wrong. Please try again.')
+        return
+      }
+      setDone(true)
       router.refresh()
     }).catch(() => {
-      setDone(false)
       setLoading(false)
       alert('Something went wrong. Please try again.')
     })
