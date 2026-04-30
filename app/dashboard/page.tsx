@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const [greeting, setGreeting] = useState('')
   const [dailyQuote, setDailyQuote] = useState({ text: '', saint: '' })
   const [globalCount, setGlobalCount] = useState(0)
+  const [sparkPrayers, setSparkPrayers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
   const { language } = useLanguage()
@@ -40,13 +41,15 @@ export default function DashboardPage() {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
 
-        const [profileRes, countRes] = await Promise.all([
+        const [profileRes, countRes, sparksRes] = await Promise.all([
           supabase.from('profiles').select('*').eq('id', user.id).single(),
-          supabase.from('prayers').select('*', { count: 'exact', head: true })
+          supabase.from('prayers').select('*', { count: 'exact', head: true }),
+          supabase.from('prayers').select('id, intention, type, offered_for').eq('depositor_id', user.id).not('withdrawn_by', 'is', null).limit(50)
         ])
 
         if (profileRes.data) setProfile(profileRes.data)
         if (countRes.count !== null) setGlobalCount(countRes.count)
+        if (sparksRes.data) setSparkPrayers(sparksRes.data)
       } catch (err) {
         console.error("Data loading failed", err)
       } finally {
@@ -98,7 +101,7 @@ export default function DashboardPage() {
       {/* Soulful Header with Constellation - The Main Sanctuary Piece */}
       <div className="relative rounded-3xl p-12 mb-10 overflow-hidden bg-ink/40 border border-gold/10 shadow-2xl min-h-[280px] flex flex-col justify-center items-center text-center group">
 
-        <Constellation sparks={profile?.sparks_received ?? 0} />
+        <Constellation sparks={profile?.sparks_received ?? 0} prayers={sparkPrayers} />
         
         {/* Daily Blessing Shimmer */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>

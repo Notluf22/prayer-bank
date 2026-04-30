@@ -12,6 +12,8 @@ export default function VaultPage() {
   const [givenPrayers, setGivenPrayers] = useState<Prayer[]>([])
   const [receivedPrayers, setReceivedPrayers] = useState<Prayer[]>([])
   const [loading, setLoading] = useState(true)
+  const [limit, setLimit] = useState(20)
+  const [loadingMore, setLoadingMore] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -25,12 +27,14 @@ export default function VaultPage() {
           .from('prayers')
           .select('*')
           .eq('depositor_id', user.id)
-          .order('created_at', { ascending: false }),
+          .order('created_at', { ascending: false })
+          .limit(limit),
         supabase
           .from('prayers')
           .select('*, depositor:profiles!depositor_id(display_name, country)')
           .eq('withdrawn_by', user.id)
           .order('created_at', { ascending: false })
+          .limit(limit)
       ])
 
       const received = receivedRes.data ?? []
@@ -38,9 +42,10 @@ export default function VaultPage() {
       setGivenPrayers(givenRes.data ?? [])
       setReceivedPrayers(received)
       setLoading(false)
+      setLoadingMore(false)
     }
     load()
-  }, [])
+  }, [limit])
   const prayerMeta: Record<string, { emoji: string; name: string }> = {}
   PRAYER_TYPES.forEach(p => { prayerMeta[p.id] = { emoji: p.emoji, name: p.name } })
 
@@ -89,8 +94,12 @@ export default function VaultPage() {
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom duration-500">
         {activeTab === 'given' ? (
           givenPrayers.length === 0 ? (
-            <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-2xl">
-              <p className="text-gray-400 italic">{t.no_history}</p>
+            <div className="text-center py-16 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-3xl flex flex-col items-center justify-center space-y-4">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-gold/50">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              <p className="text-gray-400 italic font-serif text-lg">{t.no_history}</p>
+              <a href="/dashboard/deposit" className="mt-4 px-6 py-2 rounded-xl border border-gold/30 text-gold text-sm font-bold uppercase tracking-widest hover:bg-gold/10 transition-colors">Make a Deposit</a>
             </div>
           ) : (
             givenPrayers.map(p => {
@@ -143,6 +152,22 @@ export default function VaultPage() {
               )
             })
           )
+        )}
+        
+        {((activeTab === 'given' && givenPrayers.length === limit) || 
+          (activeTab === 'received' && receivedPrayers.length === limit)) && (
+          <div className="text-center mt-6">
+            <button
+              onClick={() => {
+                setLoadingMore(true)
+                setLimit(prev => prev + 20)
+              }}
+              disabled={loadingMore}
+              className="px-6 py-2 rounded-xl border border-gold/30 text-gold text-xs font-bold uppercase tracking-widest hover:bg-gold/10 transition-colors disabled:opacity-50"
+            >
+              {loadingMore ? 'Loading...' : 'Load More'}
+            </button>
+          </div>
         )}
       </div>
     </div>

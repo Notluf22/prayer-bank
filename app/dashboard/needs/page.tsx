@@ -18,6 +18,8 @@ export default function NeedsPage() {
   const [needs, setNeeds] = useState<Need[]>([])
   const [newNeed, setNewNeed] = useState('')
   const [loading, setLoading] = useState(true)
+  const [limit, setLimit] = useState(20)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [posting, setPosting] = useState(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
   const supabase = createClient()
@@ -28,7 +30,7 @@ export default function NeedsPage() {
 
   useEffect(() => {
     fetchNeeds()
-  }, [])
+  }, [limit])
 
   async function fetchNeeds() {
     setLoading(true)
@@ -39,6 +41,7 @@ export default function NeedsPage() {
         .select('*, user:profiles!user_id(display_name)')
         .eq('status', 'pending')
         .order('created_at', { ascending: false })
+        .limit(limit)
       
       if (error) throw error
       console.log('Fetched needs:', data)
@@ -48,6 +51,7 @@ export default function NeedsPage() {
       setFetchError(err.message)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
   }
 
@@ -111,6 +115,19 @@ export default function NeedsPage() {
     router.push(`/dashboard/deposit?needId=${need.id}&intention=${encodeURIComponent(need.intention)}`)
   }
 
+  async function handleReport(id: string) {
+    if (!confirm('Are you sure you want to report this prayer request for inappropriate content?')) return;
+    
+    setNeeds(prev => prev.filter(n => n.id !== id));
+    
+    await fetch('/api/report_need', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ needId: id })
+    });
+    alert('Thank you. The request has been reported and removed from your view.');
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
@@ -146,8 +163,13 @@ export default function NeedsPage() {
             ))}
           </div>
         ) : needs.length === 0 ? (
-          <div className="text-center py-10 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-2xl">
-             <p className="text-gray-400 italic">{t.wall_empty}</p>
+          <div className="text-center py-16 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-3xl flex flex-col items-center justify-center space-y-4">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-gold/50">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M12 8v4"/>
+              <path d="M12 16h.01"/>
+            </svg>
+            <p className="text-gray-400 italic font-serif text-lg">{t.wall_empty}</p>
           </div>
         ) : (
           needs.map((need) => (
@@ -158,17 +180,41 @@ export default function NeedsPage() {
                   &ldquo;{need.intention}&rdquo;
                 </p>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mt-2">
                 <span className="text-[10px] text-gray-400">{new Date(need.created_at).toLocaleDateString()}</span>
-                <button
-                  onClick={() => handleCommit(need)}
-                  className="bg-ink dark:bg-white/10 text-white dark:text-gold px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-gold hover:text-white dark:hover:bg-gold dark:hover:text-ink transition-all active:scale-95 hover:scale-105 hover:shadow-lg"
-                >
-                  {t.praying_for_this}
-                </button>
+                <div className="flex gap-2 items-center">
+                  <button
+                    onClick={() => handleReport(need.id)}
+                    className="text-gray-400 hover:text-red-400 px-3 py-1.5 rounded-lg text-xs transition-colors"
+                    title="Report inappropriate content"
+                  >
+                    ⚑
+                  </button>
+                  <button
+                    onClick={() => handleCommit(need)}
+                    className="bg-ink dark:bg-white/10 text-white dark:text-gold px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-gold hover:text-white dark:hover:bg-gold dark:hover:text-ink transition-all active:scale-95 hover:scale-105 hover:shadow-lg"
+                  >
+                    {t.praying_for_this}
+                  </button>
+                </div>
               </div>
             </div>
           ))
+        )}
+        
+        {needs.length === limit && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => {
+                setLoadingMore(true)
+                setLimit(prev => prev + 20)
+              }}
+              disabled={loadingMore}
+              className="px-6 py-2 rounded-xl border border-gold/30 text-gold text-xs font-bold uppercase tracking-widest hover:bg-gold/10 transition-colors disabled:opacity-50"
+            >
+              {loadingMore ? 'Loading...' : 'Load More'}
+            </button>
+          </div>
         )}
       </div>
     </div>
