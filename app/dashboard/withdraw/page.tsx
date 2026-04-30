@@ -142,7 +142,7 @@ export default function WithdrawPage() {
               <div className="mb-6">
                 <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-3`}>{t.special_intention}</p>
                 <p className="font-serif italic text-xl text-ink dark:text-gray-100 leading-relaxed text-balance">
-                  "{drawnPrayer.intention}"
+                  &ldquo;{drawnPrayer.intention}&rdquo;
                 </p>
               </div>
             )}

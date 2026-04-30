@@ -155,7 +155,7 @@ export default function NeedsPage() {
               <div>
                 <p className={`text-xs font-bold text-gold uppercase ${trackingClass} mb-1`}>{t.soul_in_need}</p>
                 <p className="font-serif italic text-lg text-ink dark:text-gray-200 leading-snug text-balance">
-                  "{need.intention}"
+                  &ldquo;{need.intention}&rdquo;
                 </p>
               </div>
               <div className="flex justify-between items-center">

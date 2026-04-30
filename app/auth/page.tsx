@@ -28,7 +28,7 @@ export default function AuthPage() {
       })
       setLoading(false)
       if (error) alert('Error: ' + error.message)
-      else alert('Account created successfully!')
+      else alert('Account created successfully! Please check your email to verify your account.')
     } else {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -41,7 +41,7 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4">
+    <main className="min-h-screen flex items-center justify-center px-4 bg-parchment dark:bg-parchment-dark text-ink dark:text-ink-dark">
       <div className="max-w-sm w-full">
         <div className="text-center mb-8">
           <p className="text-gold text-xs tracking-[8px] mb-4 ornament"></p>

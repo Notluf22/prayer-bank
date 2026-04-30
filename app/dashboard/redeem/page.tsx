@@ -80,9 +80,9 @@ export default function RedeemPage() {
       </form>
 
       <div className="mt-8 p-4 bg-amber-50 dark:bg-gold/10 rounded-xl border border-gold/20 animate-in fade-in slide-in-from-bottom duration-700 delay-300">
-        <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-2`}>How it works</p>
+        <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-2`}>{t.how_it_works}</p>
         <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-          Someone deposited a prayer, withdrew it and gifted it to you as a card. Enter the code above to receive the grace they sent you.
+          {t.how_it_works_desc}
         </p>
       </div>
     </div>

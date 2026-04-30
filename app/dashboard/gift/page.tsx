@@ -94,9 +94,9 @@ export default function GiftPage() {
         {t.gift_sent_desc}
       </p>
       <div className="card-gold rounded-xl p-5 mb-6 text-left">
-        <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-2`}>Gift code</p>
+        <p className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-2`}>{t.gift_code}</p>
         <p className="font-mono text-lg font-bold text-ink dark:text-white tracking-wider">{result.code}</p>
-        <p className={`text-[10px] text-gray-400 mt-4 mb-2 uppercase ${trackingClass} font-bold`}>Shareable link</p>
+        <p className={`text-[10px] text-gray-400 mt-4 mb-2 uppercase ${trackingClass} font-bold`}>{t.shareable_link}</p>
         <p className="text-sm text-blue-600 dark:text-blue-400 break-all">{result.shareUrl}</p>
         <div className="flex gap-2 mt-4">
           <button

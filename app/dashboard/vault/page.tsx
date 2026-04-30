@@ -104,13 +104,13 @@ export default function VaultPage() {
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         p.status === 'available' ? 'bg-green-100 text-green-600' : 'bg-gold/10 text-gold'
                       }`}>
-                        {p.status === 'available' ? 'Available' : 'Received'}
+                        {p.status === 'available' ? t.available : t.received}
                       </span>
                     </div>
                     {p.intention && p.intention !== 'For the recipient of this grace' && (
                       <p className="font-serif italic text-sm text-ink dark:text-gray-200 mt-1">"{p.intention}"</p>
                     )}
-                    <p className="text-[10px] text-gray-400 mt-2">Shared on {new Date(p.created_at).toLocaleDateString()}</p>
+                    <p className="text-[10px] text-gray-400 mt-2">{t.shared_on} {new Date(p.created_at).toLocaleDateString()}</p>
                   </div>
                 </div>
               )
@@ -134,8 +134,8 @@ export default function VaultPage() {
                     )}
                     <div className="flex justify-between items-end mt-2">
                       <p className="text-[10px] text-gray-400">
-                        {p.depositor?.country && `From: ${p.depositor.country} · `}
-                        Received on {new Date(p.created_at).toLocaleDateString()}
+                        {p.depositor?.country && `${t.from}: ${p.depositor.country} · `}
+                        {t.received_on} {new Date(p.created_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>

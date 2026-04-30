@@ -11,10 +11,10 @@ export default async function GiftViewPage({ params }: { params: { code: string 
     .single()
 
   if (!gift) return (
-    <main className="min-h-screen flex items-center justify-center px-4">
+    <main className="min-h-screen flex items-center justify-center px-4 bg-parchment dark:bg-parchment-dark text-ink dark:text-ink-dark">
       <div className="text-center">
         <p className="text-5xl mb-4">❓</p>
-        <h1 className="font-serif text-2xl font-semibold text-ink mb-2">Gift not found</h1>
+        <h1 className="font-serif text-2xl font-semibold text-ink dark:text-white mb-2">Gift not found</h1>
         <p className="text-gray-500">This code may be invalid or already redeemed.</p>
         <Link href="/" className="btn-gold mt-6 inline-block px-6 py-2 rounded-xl font-serif">Visit Prayer Bank</Link>
       </div>
@@ -26,10 +26,10 @@ export default async function GiftViewPage({ params }: { params: { code: string 
     : null
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-16">
+    <main className="min-h-screen flex items-center justify-center px-4 py-16 bg-parchment dark:bg-parchment-dark text-ink dark:text-ink-dark">
       <div className="max-w-sm w-full text-center">
         <p className="text-gold text-xs tracking-[8px] ornament mb-6"></p>
-        <h1 className="font-serif text-4xl font-semibold text-ink mb-1">A Gift for You</h1>
+        <h1 className="font-serif text-4xl font-semibold text-ink dark:text-white mb-1">A Gift for You</h1>
         <p className="font-serif italic text-gray-500 mb-8">from {gift.from_user?.display_name ?? 'a friend'}</p>
 
         {/* Gift card */}
@@ -37,7 +37,7 @@ export default async function GiftViewPage({ params }: { params: { code: string 
           {gift.type === 'credits' ? (
             <>
               <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Prayer Credits</p>
-              <p className="font-serif text-5xl font-semibold text-ink mb-1">{gift.credit_amount}</p>
+              <p className="font-serif text-5xl font-semibold text-ink dark:text-white mb-1">{gift.credit_amount}</p>
               <p className="text-sm text-gray-500">prayer credits — use them to receive prayers</p>
             </>
           ) : (
@@ -45,7 +45,7 @@ export default async function GiftViewPage({ params }: { params: { code: string 
               <p className="text-xs font-bold uppercase tracking-widest text-gold mb-2">
                 {prayerMeta?.emoji} {prayerMeta?.name ?? gift.prayer?.type}
               </p>
-              <p className="font-serif italic text-ink text-base leading-relaxed">
+              <p className="font-serif italic text-ink dark:text-white text-base leading-relaxed">
                 "{gift.prayer?.intention || 'A prayer offered with love for you.'}"
               </p>
               <p className="text-xs text-gray-400 mt-3">Offered for: {gift.prayer?.offered_for}</p>
