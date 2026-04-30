@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     // Deduct credits immediately when gifting credits
     const { error: deductError } = await supabase.rpc('deduct_credits', {
       user_id: user.id,
-      amount: creditAmount,
+      amount: Number(creditAmount),
     })
     if (deductError) return NextResponse.json({ error: deductError.message }, { status: 500 })
   }

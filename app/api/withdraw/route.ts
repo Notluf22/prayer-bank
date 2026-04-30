@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   // Deduct credits
   const { error: creditError } = await supabase.rpc('deduct_credits', {
     user_id: user.id,
-    amount: prayer.credit_value,
+    amount: Number(prayer.credit_value),
   })
   if (creditError) return NextResponse.json({ error: creditError.message }, { status: 500 })
 
