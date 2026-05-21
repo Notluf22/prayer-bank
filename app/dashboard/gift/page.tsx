@@ -7,12 +7,12 @@ import { translations } from '@/lib/translations'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const PRESET_IMAGES = {
-  angel: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&auto=format&fit=crop&q=80',
-  heart: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&auto=format&fit=crop&q=80',
-  mary: 'https://images.unsplash.com/photo-1601887389937-0b02c26b6c3c?w=600&auto=format&fit=crop&q=80',
-  eucharist: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&auto=format&fit=crop&q=80',
-  peace: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&auto=format&fit=crop&q=80',
-  cross: 'https://images.unsplash.com/photo-1515263487990-61b07816b324?w=600&auto=format&fit=crop&q=80',
+  angel: 'https://image.pollinations.ai/p/Sacred_oil_painting_of_a_golden_guardian_angel_with_large_soft_wings_warm_celestial_glow_masterpiece?width=600&height=800&seed=77777&model=flux',
+  heart: 'https://image.pollinations.ai/p/Stained_glass_window_of_the_Sacred_Heart_of_Jesus_radiating_divine_warm_light_spiritual_fine_art?width=600&height=800&seed=88888&model=flux',
+  mary: 'https://image.pollinations.ai/p/Blessed_Virgin_Mary_in_a_heavenly_garden_classic_Renaissance_oil_painting_soft_spiritual_light?width=600&height=800&seed=99999&model=flux',
+  eucharist: 'https://image.pollinations.ai/p/Holy_Eucharistic_Monstrance_on_a_candlelit_altar_shining_brilliant_golden_rays_fine_art?width=600&height=800&seed=11111&model=flux',
+  peace: 'https://image.pollinations.ai/p/Holy_Spirit_dove_of_peace_flying_in_golden_sunrise_clouds_detailed_spiritual_oil_painting?width=600&height=800&seed=22222&model=flux',
+  cross: 'https://image.pollinations.ai/p/Crucifix_holy_cross_standing_in_a_mystic_forest_at_dawn_with_heavenly_light_rays_oil_painting?width=600&height=800&seed=33333&model=flux',
 }
 
 export default function GiftPage() {

@@ -4,11 +4,9 @@ import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// List of pre-configured live perpetual adoration shrines
+// Pre-configured live perpetual adoration shrine
 const SHRINES = [
-  { id: 'ewtn', nameKey: 'shrine_ewtn', videoId: 'c08G2S1q2sI', desc: 'Perpetual livestream from Hanceville, Alabama' },
-  { id: 'divine_mercy', nameKey: 'shrine_divine_mercy', videoId: 'e29G0qB5yhs', desc: 'Perpetual stream from Kraków-Łagiewniki' },
-  { id: 'holy_trinity', nameKey: 'shrine_holy_trinity', videoId: 'wH4kC-tQc-E', desc: '24/7 Eucharistic Shrine livestream' },
+  { id: 'default', nameKey: 'shrine_default', videoId: 'qz8YE61BoXM', desc: 'Perpetual Eucharistic Adoration live stream' },
 ]
 
 export default function AdorationPage() {
@@ -101,7 +99,7 @@ export default function AdorationPage() {
     if (!w.YT || !w.YT.Player) return
 
     const videoIdToLoad = showCustomInput 
-      ? getYouTubeId(customVideoId) || 'c08G2S1q2sI' 
+      ? getYouTubeId(customVideoId) || 'qz8YE61BoXM' 
       : selectedShrine.videoId
 
     try {
@@ -129,9 +127,20 @@ export default function AdorationPage() {
 
   // Helper to extract YouTube ID from full URL or just raw ID
   const getYouTubeId = (url: string) => {
+    if (!url) return ''
+    const trimmed = url.trim()
+    // If it's already an 11-char ID
+    if (trimmed.length === 11 && !trimmed.includes('/') && !trimmed.includes('?')) {
+      return trimmed
+    }
+    // Match /live/ID
+    const liveMatch = trimmed.match(/\/live\/([a-zA-Z0-9_-]{11})/)
+    if (liveMatch) return liveMatch[1]
+    
+    // Match watch?v=ID or embed/ID or youtu.be/ID
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-    const match = url.match(regExp)
-    return (match && match[2].length === 11) ? match[2] : url.trim()
+    const match = trimmed.match(regExp)
+    return (match && match[2].length === 11) ? match[2] : trimmed
   }
 
   // Active status checks
@@ -302,6 +311,7 @@ export default function AdorationPage() {
                 value={showCustomInput ? 'custom' : selectedShrine.id}
                 onChange={(e) => {
                   const val = e.target.value
+                  setPlayerState(-1) // Pause timer logging immediately while switching streams
                   if (val === 'custom') {
                     setShowCustomInput(true)
                   } else {
@@ -340,7 +350,10 @@ export default function AdorationPage() {
               />
             </div>
             <button
-              onClick={initPlayer}
+              onClick={() => {
+                setPlayerState(-1) // Pause timer logging while loading custom stream URL
+                initPlayer()
+              }}
               className="py-2.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-600 font-serif font-bold text-slate-950 text-sm transition-colors w-full sm:w-auto"
             >
               {language === 'en' ? 'Load Stream' : 'ലോഡ് ചെയ്യുക'}
@@ -401,26 +414,16 @@ export default function AdorationPage() {
                 </div>
               </div>
 
-              {/* Timer Block */}
-              <div className="text-center py-2">
-                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">
+              {/* Premium Timer Block */}
+              <div className="text-center py-5 bg-slate-950/60 rounded-xl border border-white/5 relative overflow-hidden shadow-inner">
+                {/* Inner ambient amber light glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-16 bg-amber-500/5 blur-2xl rounded-full pointer-events-none" />
+                
+                <span className="text-[10px] text-amber-500/80 font-bold uppercase tracking-[0.2em] block mb-2 relative z-10">
                   {t.active_session_time}
                 </span>
-                <span className="font-mono text-4xl md:text-5xl font-bold tracking-wider bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                <span className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold tracking-normal sm:tracking-wider bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {formatTime(activeSeconds)}
-                </span>
-              </div>
-
-              {/* Accumulated Grace Credits */}
-              <div className="text-center bg-slate-950/50 border border-white/5 rounded-xl py-4 px-2">
-                <span className="text-[10px] text-amber-500/80 font-bold uppercase tracking-widest block mb-1">
-                  {t.grace_accumulated}
-                </span>
-                <span className="font-serif text-3xl font-semibold text-amber-300">
-                  {accumulatedCredits.toFixed(4)}
-                </span>
-                <span className="text-[10px] text-slate-500 block mt-1">
-                  {language === 'en' ? 'Rate: 8 credits / hour' : 'നിരക്ക്: മണിക്കൂറിൽ 8 പുണ്യം'}
                 </span>
               </div>
 
