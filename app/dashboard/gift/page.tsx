@@ -4,6 +4,16 @@ import { useSearchParams } from 'next/navigation'
 import { PRAYER_TYPES } from '@/lib/types'
 import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
+import { motion, AnimatePresence } from 'framer-motion'
+
+const PRESET_IMAGES = {
+  angel: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&auto=format&fit=crop&q=80',
+  heart: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&auto=format&fit=crop&q=80',
+  mary: 'https://images.unsplash.com/photo-1601887389937-0b02c26b6c3c?w=600&auto=format&fit=crop&q=80',
+  eucharist: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&auto=format&fit=crop&q=80',
+  peace: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&auto=format&fit=crop&q=80',
+  cross: 'https://images.unsplash.com/photo-1515263487990-61b07816b324?w=600&auto=format&fit=crop&q=80',
+}
 
 export default function GiftPage() {
   const { language } = useLanguage()
@@ -25,6 +35,47 @@ export default function GiftPage() {
   const [message, setMessage] = useState(initialMessage)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ code: string; shareUrl: string; emailError?: string | null } | null>(null)
+
+  // Card artwork states
+  const [artworkMode, setArtworkMode] = useState<'parchment' | 'preset' | 'ai'>('parchment')
+  const [selectedPreset, setSelectedPreset] = useState<keyof typeof PRESET_IMAGES>('angel')
+  const [aiPrompt, setAiPrompt] = useState('')
+  const [generatedImageUrl, setGeneratedImageUrl] = useState('')
+  const [aiGenerating, setAiGenerating] = useState(false)
+  const [aiLoadStep, setAiLoadStep] = useState(1)
+
+  const cardImageSrc = artworkMode === 'parchment'
+    ? null
+    : (artworkMode === 'preset' ? PRESET_IMAGES[selectedPreset] : generatedImageUrl)
+
+  const handleGenerateAiArt = () => {
+    if (!aiPrompt.trim()) return
+    setAiGenerating(true)
+    setGeneratedImageUrl('')
+    setAiLoadStep(1)
+
+    // Cycle through spiritual progress statements
+    const stepInterval = setInterval(() => {
+      setAiLoadStep(prev => (prev < 4 ? prev + 1 : 4))
+    }, 1800)
+
+    const enhancedPrompt = `${aiPrompt}, sacred fine art, detailed oil painting, highly spiritual and peaceful atmosphere, glowing warm lighting, 8k resolution`;
+    const randomSeed = Math.floor(Math.random() * 1000000);
+    const generatedUrl = `https://image.pollinations.ai/p/${encodeURIComponent(enhancedPrompt)}?width=600&height=600&seed=${randomSeed}&model=flux`;
+
+    const img = new Image()
+    img.src = generatedUrl
+    img.onload = () => {
+      clearInterval(stepInterval)
+      setGeneratedImageUrl(generatedUrl)
+      setAiGenerating(false)
+    }
+    img.onerror = () => {
+      clearInterval(stepInterval)
+      alert("Failed to generate custom artwork. Please try another prompt.")
+      setAiGenerating(false)
+    }
+  }
 
   useEffect(() => {
     if (initialMessage) setMessage(initialMessage)
@@ -67,6 +118,10 @@ export default function GiftPage() {
       body.type = 'prayer'
       body.prayerId = prayer.id
     }
+
+    body.cardImage = artworkMode === 'parchment'
+      ? null
+      : (artworkMode === 'preset' ? PRESET_IMAGES[selectedPreset] : generatedImageUrl)
 
     const res = await fetch('/api/gift', {
       method: 'POST',
@@ -208,8 +263,186 @@ export default function GiftPage() {
             onChange={e => setMessage(e.target.value)}
             placeholder="..."
             rows={3}
-            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold dark:bg-white/5 dark:text-white bg-white resize-none"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold dark:bg-white/5 dark:text-white bg-white resize-none shadow-inner mb-6"
           />
+        </div>
+
+        {/* AI & Preset Card Artwork Creator */}
+        <div className="bg-white/50 dark:bg-white/5 p-5 sm:p-6 rounded-2xl border border-gold/10 shadow-lg space-y-6">
+          <div className="flex items-center gap-2 pb-3 border-b border-gold/10">
+            <span className="text-xl">🎨</span>
+            <label className={`text-xs font-bold uppercase ${trackingClass} text-gold`}>{t.card_artwork}</label>
+          </div>
+
+          {/* Selector Tabs */}
+          <div className="flex gap-1 bg-gray-100 dark:bg-white/5 p-1 rounded-xl border border-gray-200/50 dark:border-white/5 relative">
+            {(['parchment', 'preset', 'ai'] as const).map(tab => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setArtworkMode(tab)}
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all relative z-10 ${
+                  artworkMode === tab ? 'bg-white dark:bg-white/10 text-gold shadow-sm' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                }`}
+              >
+                {tab === 'parchment' && t.simple_parchment}
+                {tab === 'preset' && t.spiritual_presets}
+                {tab === 'ai' && t.ai_custom_creator}
+              </button>
+            ))}
+          </div>
+
+          <AnimatePresence mode="wait">
+            {artworkMode === 'preset' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="grid grid-cols-3 gap-2"
+              >
+                {(Object.keys(PRESET_IMAGES) as Array<keyof typeof PRESET_IMAGES>).map(presetKey => (
+                  <button
+                    key={presetKey}
+                    type="button"
+                    onClick={() => setSelectedPreset(presetKey)}
+                    className={`relative aspect-[3/4] rounded-xl overflow-hidden border transition-all hover:scale-105 active:scale-95 shadow-sm group ${
+                      selectedPreset === presetKey ? 'border-gold ring-1 ring-gold shadow-md' : 'border-gray-200 dark:border-gray-700 hover:border-gold/50'
+                    }`}
+                  >
+                    <img
+                      src={PRESET_IMAGES[presetKey]}
+                      alt={presetKey}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/40 to-transparent p-1 text-[8px] sm:text-[10px] text-center font-bold uppercase tracking-wider text-white">
+                      {presetKey === 'angel' && t.art_preset_angel}
+                      {presetKey === 'heart' && t.art_preset_heart}
+                      {presetKey === 'mary' && t.art_preset_mary}
+                      {presetKey === 'eucharist' && t.art_preset_eucharist}
+                      {presetKey === 'peace' && t.art_preset_peace}
+                      {presetKey === 'cross' && t.art_preset_cross}
+                    </div>
+                  </button>
+                ))}
+              </motion.div>
+            )}
+
+            {artworkMode === 'ai' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-4"
+              >
+                <div className="space-y-2">
+                  <textarea
+                    value={aiPrompt}
+                    onChange={e => setAiPrompt(e.target.value)}
+                    placeholder={t.ai_prompt_placeholder}
+                    rows={2}
+                    className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-gold dark:bg-white/5 dark:text-white bg-white resize-none shadow-inner"
+                  />
+                  
+                  {/* Preset prompt helper pills */}
+                  <div className="flex flex-wrap gap-1">
+                    {[
+                      { en: "Sacred stained glass monstrance radiating warm golden light", ml: "അൾത്താരയിൽ പ്രകാശിക്കുന്ന പരിശുദ്ധ കുർബാന" },
+                      { en: "Classic oil painting of guardian angel with large soft wings", ml: "സ്വർണ്ണ ചിറകുകളുള്ള കാവൽ മാലാഖയുടെ പെയിന്റിംഗ്" },
+                      { en: "Statue of Virgin Mary in garden with white roses and sunlight", ml: "വെളുത്ത റോസാപ്പൂക്കൾക്കിടയിൽ മാതാവിന്റെ തിരുസ്വരൂപം" },
+                      { en: "A peaceful dove flying in majestic cloud sunrise, religious fine art", ml: "സൂര്യോദയത്തിൽ പറക്കുന്ന സമാധാനത്തിന്റെ പ്രാവ്" }
+                    ].map((pill, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setAiPrompt(language === 'en' ? pill.en : pill.ml)}
+                        className="bg-gold/5 border border-gold/15 hover:bg-gold/15 text-gold-dark dark:text-gold-light px-2.5 py-1 rounded-full text-[9px] font-medium transition-colors"
+                      >
+                        {language === 'en' ? pill.en : pill.ml}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleGenerateAiArt}
+                  disabled={aiGenerating || !aiPrompt.trim()}
+                  className="w-full btn-gold py-2.5 rounded-xl text-xs font-serif disabled:opacity-50 hover:scale-[1.01] active:scale-95 transition-transform"
+                >
+                  {aiGenerating ? t.generating_art : t.generate_ai_btn}
+                </button>
+
+                {aiGenerating && (
+                  <div className="flex flex-col items-center justify-center p-8 bg-gold/5 border border-gold/10 rounded-xl animate-pulse space-y-3">
+                    <div className="w-8 h-8 rounded-full border-2 border-t-gold border-gold/20 animate-spin"></div>
+                    <p className="text-xs text-gold font-serif italic">
+                      {aiLoadStep === 1 && "Casting spiritual canvas..."}
+                      {aiLoadStep === 2 && "Blending celestial colors..."}
+                      {aiLoadStep === 3 && "Applying digital oil strokes..."}
+                      {aiLoadStep === 4 && "Shining warm holy light..."}
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Real-time live greeting card preview */}
+          <div className="pt-4 border-t border-gold/10 space-y-3">
+            <p className={`text-[10px] font-bold text-gray-400 uppercase ${trackingClass}`}>{t.preview_card}</p>
+            
+            <div className="relative aspect-[3/4] w-full max-w-[280px] mx-auto rounded-2xl overflow-hidden shadow-2xl border border-gold/20 flex flex-col justify-between p-6 bg-parchment dark:bg-parchment-dark text-ink dark:text-ink-dark transition-all duration-500">
+              
+              {/* Dynamic Image Background with Glassmorphic Overlay */}
+              {cardImageSrc && (
+                <>
+                  <img
+                    src={cardImageSrc}
+                    alt="Preview Background"
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                  />
+                  <div className="absolute inset-0 bg-ink/30 dark:bg-ink/50 backdrop-blur-[1px] transition-all"></div>
+                </>
+              )}
+
+              {/* Decorative Corner Ornaments */}
+              <div className="absolute top-2 left-2 border-t border-l border-gold/40 w-4 h-4 rounded-tl-lg pointer-events-none"></div>
+              <div className="absolute top-2 right-2 border-t border-r border-gold/40 w-4 h-4 rounded-tr-lg pointer-events-none"></div>
+              <div className="absolute bottom-2 left-2 border-b border-l border-gold/40 w-4 h-4 rounded-bl-lg pointer-events-none"></div>
+              <div className="absolute bottom-2 right-2 border-b border-r border-gold/40 w-4 h-4 rounded-br-lg pointer-events-none"></div>
+
+              {/* Top Section */}
+              <div className="relative z-10 text-center">
+                <span className={`text-[9px] tracking-[6px] uppercase font-bold text-gold ${trackingClass} block mb-1`}>
+                  ✦ Sanctuary Blessing ✦
+                </span>
+                <div className="w-12 h-px bg-gold/30 mx-auto"></div>
+              </div>
+
+              {/* Middle Section: Message */}
+              <div className="relative z-10 text-center px-2 py-4 my-auto">
+                {message ? (
+                  <p className={`font-serif italic leading-relaxed text-sm md:text-base ${cardImageSrc ? 'text-white drop-shadow' : 'text-ink dark:text-gray-200'}`}>
+                    &ldquo;{message}&rdquo;
+                  </p>
+                ) : (
+                  <p className="font-serif italic text-xs text-gray-400">
+                    &ldquo;{language === 'en' ? "Your blessing message will appear here..." : "നിങ്ങളുടെ അനുഗ്രഹ സന്ദേശം ഇവിടെ കാണാം..."}&rdquo;
+                  </p>
+                )}
+              </div>
+
+              {/* Bottom Section: Credit Value & Label */}
+              <div className="relative z-10 text-center">
+                <div className="w-8 h-px bg-gold/20 mx-auto mb-2"></div>
+                <p className={`text-[9px] font-bold text-gold uppercase ${trackingClass}`}>
+                  {mode === 'credits' ? `${selectedBundle.credits} ${t.credits}` : `${selectedPrayerType.emoji} ${selectedPrayerType.name}`}
+                </p>
+                <p className="text-[7px] text-gray-400 mt-1 uppercase tracking-wider">PrayerBank Treasury</p>
+              </div>
+
+            </div>
+          </div>
         </div>
 
         <button

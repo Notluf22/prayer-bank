@@ -154,6 +154,50 @@ export default function NeedsPage() {
         {(error || fetchError) && <p className={`text-center text-red-400 text-[10px] mt-2 font-bold uppercase ${trackingClass}`}>{error || fetchError}</p>}
       </form>
 
+      {/* Universal Intentions Section */}
+      <div className="mb-10 space-y-4">
+        <h2 className={`text-xs font-bold uppercase ${trackingClass} text-gold/80 flex items-center gap-2`}>
+          <span>✦</span> {t.universal_intentions} <span>✦</span>
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            { id: 'peace', intentionKey: 'constant_req_peace', emoji: '🕊️' },
+            { id: 'pope', intentionKey: 'constant_req_pope', emoji: '👑' },
+            { id: 'souls', intentionKey: 'constant_req_souls', emoji: '📿' },
+            { id: 'vocations', intentionKey: 'constant_req_vocations', emoji: '🕯️' },
+            { id: 'sick', intentionKey: 'constant_req_sick', emoji: '❤️' },
+          ].map((req) => {
+            const intentionText = t[req.intentionKey as keyof typeof t] as string;
+            return (
+              <div 
+                key={req.id} 
+                className="relative rounded-2xl p-4 bg-gold/5 dark:bg-gold/10 border border-gold/20 shadow-sm flex flex-col justify-between gap-4 hover:border-gold/40 hover:bg-gold/10 dark:hover:bg-gold/20 transition-all duration-300 group hover:scale-[1.01]"
+              >
+                <div className="flex gap-3">
+                  <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{req.emoji}</span>
+                  <div>
+                    <p className={`text-[9px] font-bold text-gold uppercase ${trackingClass} mb-1`}>
+                      {t.soul_in_need}
+                    </p>
+                    <p className="font-serif italic text-sm text-ink dark:text-gray-200 leading-snug">
+                      &ldquo;{intentionText}&rdquo;
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-end mt-2 border-t border-gold/10 pt-3">
+                  <button
+                    onClick={() => router.push(`/dashboard/deposit?intention=${encodeURIComponent(intentionText)}`)}
+                    className="bg-ink dark:bg-white/10 text-white dark:text-gold px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gold hover:text-white dark:hover:bg-gold dark:hover:text-ink transition-all active:scale-95 shadow-sm"
+                  >
+                    {t.praying_for_this}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="space-y-4">
         <h2 className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 mb-2`}>{t.pending_needs}</h2>
         {loading ? (

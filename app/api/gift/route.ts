@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { type, creditAmount, prayerId, giftMessage } = await request.json()
+  const { type, creditAmount, prayerId, giftMessage, cardImage } = await request.json()
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -59,6 +59,7 @@ export async function POST(request: Request) {
     prayer_id: type === 'prayer' ? prayerId : null,
     from_user_id: user.id,
     gift_message: giftMessage || null,
+    card_image: cardImage || null,
   })
   if (giftError) return NextResponse.json({ error: giftError.message }, { status: 500 })
 

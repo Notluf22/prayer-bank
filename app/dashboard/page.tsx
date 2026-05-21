@@ -157,6 +157,20 @@ export default function DashboardPage() {
           </div>
           <span className="text-gold text-lg group-hover:translate-x-1 transition-transform">→</span>
         </Link>
+
+        {/* Live Adoration Chapel Glowing Banner */}
+        <Link href="/dashboard/adoration" className="relative overflow-hidden bg-gradient-to-r from-violet-950 via-slate-900 to-amber-950/80 rounded-xl p-5 flex items-center gap-4 hover:bg-slate-900/90 transition-all block border border-amber-500/20 group hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] active:scale-95">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+          <span className="text-3xl group-hover:scale-110 transition-transform animate-pulse">🛐</span>
+          <div className="flex-1">
+            <p className="font-semibold text-white flex items-center gap-2">
+              {t.adoration_chapel}
+              <span className="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider animate-pulse">Live</span>
+            </p>
+            <p className="text-sm text-slate-300">{t.adore_hours_desc}</p>
+          </div>
+          <span className="text-amber-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
+        </Link>
       </div>
 
       {/* Secondary Actions - Fixed Scaling */}
