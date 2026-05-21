@@ -7,12 +7,12 @@ import { translations } from '@/lib/translations'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const PRESET_IMAGES = {
-  angel: 'https://gen.pollinations.ai/image/Sacred%20oil%20painting%20of%20a%20golden%20guardian%20angel%20with%20large%20soft%20wings%20warm%20celestial%20glow%20masterpiece?width=600&height=800&seed=77777&model=flux',
-  heart: 'https://gen.pollinations.ai/image/Stained%20glass%20window%20of%20the%20Sacred%20Heart%20of%20Jesus%20radiating%20divine%20warm%20light%20spiritual%20fine%20art?width=600&height=800&seed=88888&model=flux',
-  mary: 'https://gen.pollinations.ai/image/Blessed%20Virgin%20Mary%20in%20a%20heavenly%20garden%20classic%20Renaissance%20oil%20painting%20soft%20spiritual%20light?width=600&height=800&seed=99999&model=flux',
-  eucharist: 'https://gen.pollinations.ai/image/Holy%20Eucharistic%20Monstrance%20on%20a%20candlelit%20altar%20shining%20brilliant%20golden%20rays%20fine%20art?width=600&height=800&seed=11111&model=flux',
-  peace: 'https://gen.pollinations.ai/image/Holy%20Spirit%20dove%20of%20peace%20flying%20in%20golden%20sunrise%20clouds%20detailed%20spiritual%20oil%20painting?width=600&height=800&seed=22222&model=flux',
-  cross: 'https://gen.pollinations.ai/image/Crucifix%20holy%20cross%20standing%20in%20a%20mystic%20forest%20at%20dawn%20with%20heavenly%20light%20rays%20oil%20painting?width=600&height=800&seed=33333&model=flux',
+  angel: 'https://image.pollinations.ai/prompt/Sacred%20oil%20painting%20of%20a%20golden%20guardian%20angel%20with%20large%20soft%20wings%20warm%20celestial%20glow%20masterpiece?width=600&height=800&seed=77777&model=flux',
+  heart: 'https://image.pollinations.ai/prompt/Stained%20glass%20window%20of%20the%20Sacred%20Heart%20of%20Jesus%20radiating%20divine%20warm%20light%20spiritual%20fine%20art?width=600&height=800&seed=88888&model=flux',
+  mary: 'https://image.pollinations.ai/prompt/Blessed%20Virgin%20Mary%20in%20a%20heavenly%20garden%20classic%20Renaissance%20oil%20painting%20soft%20spiritual%20light?width=600&height=800&seed=99999&model=flux',
+  eucharist: 'https://image.pollinations.ai/prompt/Holy%20Eucharistic%20Monstrance%20on%20a%20candlelit%20altar%20shining%20brilliant%20golden%20rays%20fine%20art?width=600&height=800&seed=11111&model=flux',
+  peace: 'https://image.pollinations.ai/prompt/Holy%20Spirit%20dove%20of%20peace%20flying%20in%20golden%20sunrise%20clouds%20detailed%20spiritual%20oil%20painting?width=600&height=800&seed=22222&model=flux',
+  cross: 'https://image.pollinations.ai/prompt/Crucifix%20holy%20cross%20standing%20in%20a%20mystic%20forest%20at%20dawn%20with%20heavenly%20light%20rays%20oil%20painting?width=600&height=800&seed=33333&model=flux',
 }
 
 export default function GiftPage() {
@@ -61,7 +61,7 @@ export default function GiftPage() {
 
     const enhancedPrompt = `${aiPrompt}, sacred fine art, detailed oil painting, highly spiritual and peaceful atmosphere, glowing warm lighting, 8k resolution`;
     const randomSeed = Math.floor(Math.random() * 1000000);
-    const generatedUrl = `https://gen.pollinations.ai/image/${encodeURIComponent(enhancedPrompt)}?width=600&height=600&seed=${randomSeed}&model=flux`;
+    const generatedUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?width=600&height=600&seed=${randomSeed}&model=flux`;
 
     const img = new Image()
     img.src = generatedUrl
