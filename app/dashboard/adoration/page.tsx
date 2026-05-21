@@ -390,7 +390,7 @@ export default function AdorationPage() {
           <div className="flex flex-col gap-6">
             
             {/* Status & Stats Panel */}
-            <div className="rounded-2xl border border-white/10 bg-slate-900/40 backdrop-blur-md p-6 flex flex-col gap-6 shadow-xl relative overflow-hidden">
+            <div className="rounded-2xl border border-white/10 bg-slate-900/40 backdrop-blur-md p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 shadow-xl relative overflow-hidden">
               
               {/* Decorative gold ornament */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
@@ -422,7 +422,7 @@ export default function AdorationPage() {
                 <span className="text-[10px] text-amber-500/80 font-bold uppercase tracking-[0.2em] block mb-2 relative z-10">
                   {t.active_session_time}
                 </span>
-                <span className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold tracking-normal sm:tracking-wider bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <span className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight sm:tracking-wider bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {formatTime(activeSeconds)}
                 </span>
               </div>
