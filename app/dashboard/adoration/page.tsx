@@ -422,7 +422,7 @@ export default function AdorationPage() {
                 <span className="text-[10px] text-amber-500/80 font-bold uppercase tracking-[0.2em] block mb-2 relative z-10">
                   {t.active_session_time}
                 </span>
-                <span className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight sm:tracking-wider bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <span className="font-mono text-3xl sm:text-4xl font-bold tracking-normal bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {formatTime(activeSeconds)}
                 </span>
               </div>

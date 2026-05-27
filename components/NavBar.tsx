@@ -41,7 +41,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
       <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-16 md:h-20">
         <Link href="/dashboard" className="group flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20 group-hover:bg-gold/20 transition-colors">
-            <span className="text-sm">🕊</span>
+            <span className="text-sm leading-none">🕊</span>
           </div>
           <span className="font-serif text-lg font-bold tracking-tight text-ink dark:text-white hidden sm:inline">
             PrayerBank
@@ -65,9 +65,10 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
               >
                 {isActive && (
                   <motion.div
-                    layoutId="nav-desktop-active"
                     className="absolute inset-0 bg-white dark:bg-white/10 shadow-sm rounded-lg"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
                   />
                 )}
                 {!isActive && (
@@ -75,8 +76,8 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
                 )}
                 <motion.span 
                   className="relative z-10 block origin-bottom"
-                  whileHover={{ scale: 1.2, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
                   {l.label}
@@ -104,7 +105,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
               >
                 <motion.span 
                   className="text-lg sm:text-xl relative z-10 block origin-bottom"
-                  whileHover={{ scale: 1.15, y: -1 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
@@ -117,7 +118,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
 
         <div className="flex items-center gap-1.5 sm:gap-3">
           {/* Credits indicator badge */}
-          <div className="flex flex-col items-end">
+          <div className="flex items-center gap-2">
             <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 hidden sm:inline">{t.grace}</span>
             <div className="flex items-center gap-1 px-2 py-1 rounded-xl bg-gold/5 dark:bg-gold/10 border border-gold/15 text-xs font-bold text-gold">
               <span>✨</span>

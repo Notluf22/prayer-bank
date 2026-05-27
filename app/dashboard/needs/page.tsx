@@ -176,9 +176,6 @@ export default function NeedsPage() {
                 <div className="flex gap-3">
                   <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{req.emoji}</span>
                   <div>
-                    <p className={`text-[9px] font-bold text-gold uppercase ${trackingClass} mb-1`}>
-                      {t.soul_in_need}
-                    </p>
                     <p className="font-serif italic text-sm text-ink dark:text-gray-200 leading-snug">
                       &ldquo;{intentionText}&rdquo;
                     </p>
@@ -219,7 +216,6 @@ export default function NeedsPage() {
           needs.map((need) => (
             <div key={need.id} className="card-gold rounded-2xl p-5 shadow-md flex flex-col gap-4 group hover:border-gold/40 transition-all active:scale-[0.99]">
               <div>
-                <p className={`text-xs font-bold text-gold uppercase ${trackingClass} mb-1`}>{t.soul_in_need}</p>
                 <p className="font-serif italic text-lg text-ink dark:text-gray-200 leading-snug text-balance">
                   &ldquo;{need.intention}&rdquo;
                 </p>
