@@ -52,7 +52,11 @@ export default function DepositPage() {
     <div className="text-center py-10 animate-in fade-in zoom-in duration-500">
       <p className="text-5xl mb-4">🤲</p>
       <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">{t.prayer_shared}</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-6">{t.shared_grace_earned} <strong>+{selectedType.creditValue} {t.credits}</strong></p>
+      <p className="text-gray-500 dark:text-gray-400 mb-6">
+        {needId 
+          ? <>You offered <strong>{selectedType.creditValue} {t.credits}</strong> from your balance for this intention.</>
+          : <>{t.shared_grace_earned} <strong>+{selectedType.creditValue} {t.credits}</strong></>}
+      </p>
       
       <div className="p-6 bg-white/50 dark:bg-white/5 rounded-2xl border border-gold/20 shadow-lg mb-8 relative overflow-hidden mx-auto max-w-md">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"></div>
@@ -125,8 +129,10 @@ export default function DepositPage() {
 
         {/* Credit preview */}
         <div className="flex justify-between items-center bg-white/50 dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-100 dark:border-white/5">
-          <span className="text-sm text-gray-500">{t.credits_earn}</span>
-          <span className="font-serif text-lg font-semibold text-gold">+{selectedType.creditValue} {t.credits}</span>
+          <span className="text-sm text-gray-500">{needId ? 'Grace required' : t.credits_earn}</span>
+          <span className={`font-serif text-lg font-semibold ${needId ? 'text-red-400' : 'text-gold'}`}>
+            {needId ? '-' : '+'}{selectedType.creditValue} {t.credits}
+          </span>
         </div>
 
         <button

@@ -19,46 +19,59 @@ export async function POST(request: Request) {
     .eq('id', user.id)
     .single()
 
-  let prayerStatus = 'available'
-  let withdrawnBy = null
-  let needUserId = null
-
   if (needId) {
-    const { data: need } = await supabase.from('needs').select('user_id').eq('id', needId).single()
-    if (need) {
-      needUserId = need.user_id
-      prayerStatus = 'withdrawn'
-      withdrawnBy = need.user_id
+    // Check user credits first
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || profile.credits < creditValue) {
+      return NextResponse.json({ error: 'Not enough grace credits to offer this prayer.' }, { status: 400 })
     }
-  }
 
-  // Insert prayer
-  const { data: newPrayer, error: prayerError } = await supabase.from('prayers').insert({
-    depositor_id: user.id,
-    type,
-    intention: intention || null,
-    offered_for: offeredFor,
-    credit_value: creditValue,
-    status: prayerStatus,
-    withdrawn_by: withdrawnBy,
-    country: profile?.country ?? null,
-  }).select().single()
-  if (prayerError) return NextResponse.json({ error: prayerError.message }, { status: 500 })
-
-  // If this prayer was for a specific need, fulfill it
-  if (needId) {
+    // Fulfill the need
     await supabase
       .from('needs')
       .update({ status: 'fulfilled', prayed_by: user.id })
       .eq('id', needId)
-  }
 
-  // Increment user credits and total_deposited
-  const { error: profileError } = await supabase.rpc('add_credits', {
-    user_id: user.id,
-    amount: creditValue,
-  })
-  if (profileError) return NextResponse.json({ error: profileError.message }, { status: 500 })
+    // Deduct credits from the user praying
+    const { error: creditError } = await supabase.rpc('deduct_credits', {
+      user_id: user.id,
+      amount: creditValue,
+    })
+    if (creditError) return NextResponse.json({ error: creditError.message }, { status: 500 })
+
+    // Log transaction
+    await supabase.from('transactions').insert({
+      user_id: user.id,
+      type: 'withdraw',
+      prayer_id: null,
+      amount: -creditValue,
+    })
+
+  } else {
+    // Normal flow: insert to bank, credit user
+    const { error: prayerError } = await supabase.from('prayers').insert({
+      depositor_id: user.id,
+      type,
+      intention: intention || null,
+      offered_for: offeredFor,
+      credit_value: creditValue,
+      status: 'available',
+      country: profile?.country ?? null,
+    })
+    if (prayerError) return NextResponse.json({ error: prayerError.message }, { status: 500 })
+
+    // Increment user credits and total_deposited
+    const { error: profileError } = await supabase.rpc('add_credits', {
+      user_id: user.id,
+      amount: creditValue,
+    })
+    if (profileError) return NextResponse.json({ error: profileError.message }, { status: 500 })
+  }
 
   revalidatePath('/dashboard')
   return NextResponse.json({ success: true })
