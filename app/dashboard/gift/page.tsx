@@ -5,6 +5,7 @@ import { PRAYER_TYPES } from '@/lib/types'
 import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 const PRESET_IMAGES = {
   angel: 'https://pollinations.ai/p/Sacred%20oil%20painting%20of%20a%20golden%20guardian%20angel%20with%20large%20soft%20wings%20warm%20celestial%20glow%20masterpiece?width=600&height=800&seed=77777',
@@ -63,7 +64,7 @@ export default function GiftPage() {
     const randomSeed = Math.floor(Math.random() * 1000000);
     const generatedUrl = `https://pollinations.ai/p/${encodeURIComponent(enhancedPrompt)}?width=600&height=600&seed=${randomSeed}`;
 
-    const img = new Image()
+    const img = new window.Image()
     img.src = generatedUrl
     img.onload = () => {
       clearInterval(stepInterval)
@@ -309,10 +310,11 @@ export default function GiftPage() {
                       selectedPreset === presetKey ? 'border-gold ring-1 ring-gold shadow-md' : 'border-gray-200 dark:border-gray-700 hover:border-gold/50'
                     }`}
                   >
-                    <img
+                    <Image
                       src={PRESET_IMAGES[presetKey]}
                       alt={presetKey}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/40 to-transparent p-1 text-[8px] sm:text-[10px] text-center font-bold uppercase tracking-wider text-white">
                       {presetKey === 'angel' && t.art_preset_angel}
@@ -396,12 +398,13 @@ export default function GiftPage() {
               {/* Dynamic Image Background with Glassmorphic Overlay */}
               {cardImageSrc && (
                 <>
-                  <img
+                  <Image
                     src={cardImageSrc}
-                    alt="Preview Background"
-                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                    alt="Card Background"
+                    fill
+                    className="object-cover opacity-80"
                   />
-                  <div className="absolute inset-0 bg-ink/30 dark:bg-ink/50 backdrop-blur-[1px] transition-all"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-parchment/60 via-parchment/80 to-parchment dark:from-ink/70 dark:via-ink/80 dark:to-ink backdrop-blur-[2px]" />
                 </>
               )}
 

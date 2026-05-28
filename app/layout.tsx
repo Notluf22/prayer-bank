@@ -20,6 +20,29 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: 'Prayer Bank — A Treasury of Faith',
   description: 'Deposit prayers and share them with people all over the world. Withdraw prayers gifted by the global community.',
+  keywords: ['Prayer Bank', 'global prayer network', 'share grace', 'catholic prayer chain', 'perpetual adoration', 'online prayer requests'],
+  openGraph: {
+    title: 'Prayer Bank — A Treasury of Faith',
+    description: 'Deposit prayers and share them with people all over the world. Withdraw prayers gifted by the global community.',
+    url: 'https://prayerbank.vercel.app',
+    siteName: 'Prayer Bank',
+    images: [
+      {
+        url: 'https://pollinations.ai/p/Sacred%20golden%20treasury%20of%20heavenly%20light%20and%20grace%20ethereal%20glow%20masterpiece?width=1200&height=630&seed=123',
+        width: 1200,
+        height: 630,
+        alt: 'Prayer Bank - A Treasury of Faith',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Prayer Bank — A Treasury of Faith',
+    description: 'Deposit prayers and share them with people all over the world. Withdraw prayers gifted by the global community.',
+    images: ['https://pollinations.ai/p/Sacred%20golden%20treasury%20of%20heavenly%20light%20and%20grace%20ethereal%20glow%20masterpiece?width=1200&height=630&seed=123'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,3 +1,16 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'pollinations.ai',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.pollinations.ai',
+      }
+    ],
+  },
+}
 module.exports = nextConfig

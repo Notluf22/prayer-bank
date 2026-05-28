@@ -5,6 +5,7 @@ import { PRAYER_TYPES } from '@/lib/types'
 import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 interface GiftCardClientProps {
   gift: {
@@ -147,10 +148,11 @@ export default function GiftCardClient({ gift }: GiftCardClientProps) {
                   {/* Background Artwork */}
                   {hasImage && (
                     <>
-                      <img 
+                      <Image 
                         src={gift.card_image!} 
                         alt="Blessing Card Art" 
-                        className="absolute inset-0 w-full h-full object-cover opacity-80"
+                        fill
+                        className="object-cover opacity-80"
                       />
                       {/* Dark overlay to ensure beautiful glassmorphic high-contrast readability */}
                       <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-black/80 to-slate-950/90 backdrop-blur-[2px]" />
