@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: 'Prayer Bank',
     images: [
       {
-        url: 'https://pollinations.ai/p/Sacred%20golden%20treasury%20of%20heavenly%20light%20and%20grace%20ethereal%20glow%20masterpiece?width=1200&height=630&seed=123',
+        url: 'https://image.pollinations.ai/prompt/Sacred%20golden%20treasury%20of%20heavenly%20light%20and%20grace%20ethereal%20glow%20masterpiece?width=1200&height=630&seed=123',
         width: 1200,
         height: 630,
         alt: 'Prayer Bank - A Treasury of Faith',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Prayer Bank — A Treasury of Faith',
     description: 'Deposit prayers and share them with people all over the world. Withdraw prayers gifted by the global community.',
-    images: ['https://pollinations.ai/p/Sacred%20golden%20treasury%20of%20heavenly%20light%20and%20grace%20ethereal%20glow%20masterpiece?width=1200&height=630&seed=123'],
+    images: ['https://image.pollinations.ai/prompt/Sacred%20golden%20treasury%20of%20heavenly%20light%20and%20grace%20ethereal%20glow%20masterpiece?width=1200&height=630&seed=123'],
   },
 }
 
