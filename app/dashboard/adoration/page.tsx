@@ -396,12 +396,12 @@ export default function AdorationPage() {
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
 
               {/* Presence Status Pill */}
-              <div className="flex items-center justify-between border-b border-white/5 pb-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
                 <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
                   {t.presence_status}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className={`w-2.5 h-2.5 rounded-full ${
+                  <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${
                     isAbsent 
                       ? 'bg-red-500 animate-ping' 
                       : (isTrackingActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]' : 'bg-amber-500')
@@ -422,7 +422,7 @@ export default function AdorationPage() {
                 <span className="text-[10px] text-amber-500/80 font-bold uppercase tracking-[0.2em] block mb-2 relative z-10">
                   {t.active_session_time}
                 </span>
-                <span className="font-mono text-3xl sm:text-4xl font-bold tracking-normal bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <span className="font-mono text-2xl sm:text-3xl lg:text-4xl font-bold tracking-normal bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent relative z-10 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {formatTime(activeSeconds)}
                 </span>
               </div>

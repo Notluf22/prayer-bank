@@ -38,7 +38,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
 
   return (
     <nav className="border-b border-gold/10 bg-white/70 dark:bg-ink/70 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-16 md:h-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 md:h-20">
         <Link href="/dashboard" className="group flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20 group-hover:bg-gold/20 transition-colors">
             <span className="text-sm leading-none">🕊</span>
@@ -49,7 +49,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
         </Link>
 
         {/* Desktop Navigation Icons */}
-        <div className="hidden lg:flex items-center gap-1 bg-gray-100/50 dark:bg-white/5 p-1 rounded-xl border border-gray-200/50 dark:border-white/5">
+        <div className="hidden lg:flex items-center gap-2 bg-gray-100/50 dark:bg-white/5 p-1.5 rounded-xl border border-gray-200/50 dark:border-white/5">
           {links.map(l => {
             const isActive = pathname === l.href;
             return (
@@ -89,7 +89,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
         </div>
 
         {/* Mobile/Tablet Navigation Icons - Clean Emojis Only */}
-        <div className="flex lg:hidden items-center gap-1.5 sm:gap-2">
+        <div className="flex lg:hidden items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1">
           {links.filter(l => l.mobile).map(l => {
             const isActive = pathname === l.href;
             return (
