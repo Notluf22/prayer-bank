@@ -82,7 +82,7 @@ export default function WithdrawPage() {
       <div className="text-center mb-8">
         <h1 className="font-serif text-3xl font-semibold text-ink dark:text-white">{t.receive_prayer}</h1>
         <p className="font-serif italic text-gray-500 dark:text-gray-400 mt-1">
-          {t.available_grace}: <strong>{credits}</strong> {t.credits}
+          {t.available_grace}: <strong>{Number(credits.toFixed(1))}</strong> {t.credits}
         </p>
       </div>
 

@@ -123,7 +123,7 @@ export default function DashboardPage() {
         {/* Humble Grace Indicator */}
         <div className="absolute bottom-6 right-8 flex items-center gap-2 opacity-40">
           <span className={`text-[10px] text-gray-400 uppercase ${trackingWidestClass} font-bold`}>{t.available_grace}:</span>
-          <span className="text-sm font-bold text-gold">{profile?.credits ?? 0}</span>
+          <span className="text-sm font-bold text-gold">{Number((profile?.credits ?? 0).toFixed(1))}</span>
         </div>
       </div>
 
