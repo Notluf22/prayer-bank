@@ -122,7 +122,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
             <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 hidden sm:inline">{t.grace}</span>
             <div className="flex items-center gap-1 px-2 py-1 rounded-xl bg-gold/5 dark:bg-gold/10 border border-gold/15 text-xs font-bold text-gold">
               <span>✨</span>
-              <span>{profile?.credits ?? 0}</span>
+              <span>{Number((profile?.credits ?? 0).toFixed(1))}</span>
             </div>
           </div>
           
