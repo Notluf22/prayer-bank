@@ -82,7 +82,7 @@ export default function NavBar({ profile }: { profile: UserProfile | null }) {
                 >
                   {l.label}
                 </motion.span>
-                <span className={`relative z-10 ${isActive ? 'inline' : 'hidden'}`}>{l.title}</span>
+                <span className={`relative z-10 whitespace-nowrap text-xs ${isActive ? 'inline' : 'hidden'}`}>{l.title}</span>
               </Link>
             )
           })}
