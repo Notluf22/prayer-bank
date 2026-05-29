@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { PRAYER_TYPES } from '@/lib/types'
 import { useLanguage } from '@/lib/LanguageContext'
@@ -10,12 +10,22 @@ export default function DepositPage() {
   const { language } = useLanguage()
   const t = translations[language]
   const [selectedType, setSelectedType] = useState(PRAYER_TYPES[0])
+  const [multiplier, setMultiplier] = useState<number>(1)
+  const [customMultiplier, setCustomMultiplier] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
 
   const searchParams = useSearchParams()
   const needId = searchParams.get('needId')
   const specificIntention = searchParams.get('intention')
+
+  // Reset multiplier when changing prayer type
+  useEffect(() => {
+    setMultiplier(1)
+    setCustomMultiplier('')
+  }, [selectedType])
+
+  const totalCredits = Number((selectedType.creditValue * multiplier).toFixed(1))
 
   async function handleDeposit(e: React.FormEvent) {
     e.preventDefault()
@@ -28,7 +38,7 @@ export default function DepositPage() {
         type: selectedType.id, 
         intention: specificIntention || 'For the recipient of this grace', 
         offeredFor: 'The Global Treasury',
-        creditValue: selectedType.creditValue,
+        creditValue: totalCredits,
         needId: needId
       }),
     }).then(async (res) => {
@@ -54,14 +64,16 @@ export default function DepositPage() {
       <h2 className="font-serif text-3xl font-semibold text-ink dark:text-white mb-2">{t.prayer_shared}</h2>
       <p className="text-gray-500 dark:text-gray-400 mb-6">
         {needId 
-          ? <>You offered <strong>{selectedType.creditValue} {t.credits}</strong> from your balance for this intention.</>
-          : <>{t.shared_grace_earned} <strong>+{selectedType.creditValue} {t.credits}</strong></>}
+          ? <>You offered <strong>{totalCredits} {t.credits}</strong> from your balance for this intention.</>
+          : <>{t.shared_grace_earned} <strong>+{totalCredits} {t.credits}</strong></>}
       </p>
       
       <div className="p-6 bg-white/50 dark:bg-white/5 rounded-2xl border border-gold/20 shadow-lg mb-8 relative overflow-hidden mx-auto max-w-md">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"></div>
         <p className="text-3xl mb-3">{selectedType.emoji}</p>
-        <p className={`text-xs font-bold uppercase ${trackingClass} text-gold mb-3`}>{selectedType.name}</p>
+        <p className={`text-xs font-bold uppercase ${trackingClass} text-gold mb-3`}>
+          {multiplier > 1 ? `${multiplier}x ` : ''}{selectedType.name}
+        </p>
         <p className="font-serif text-xl text-ink dark:text-white leading-relaxed italic text-balance">
           &ldquo;{t.prayer_texts?.[selectedType.id as keyof typeof t.prayer_texts] || selectedType.description}&rdquo;
         </p>
@@ -116,6 +128,48 @@ export default function DepositPage() {
           </div>
         </div>
 
+        {/* Multiplier for Hail Mary */}
+        {selectedType.id === 'hail_mary' && (
+          <div className="animate-in fade-in slide-in-from-top-2">
+            <label className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 block mb-3`}>How Many Prayers?</label>
+            <div className="flex flex-wrap gap-2">
+              {[1, 10, 50].map(num => (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => {
+                    setMultiplier(num)
+                    setCustomMultiplier('')
+                  }}
+                  className={`px-4 py-2 rounded-xl border transition-all text-sm font-medium ${
+                    multiplier === num && !customMultiplier
+                      ? 'border-gold bg-amber-50 dark:bg-gold/10 text-ink dark:text-white'
+                      : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:border-gold/50 dark:hover:border-gold/50'
+                  }`}
+                >
+                  {num}x
+                </button>
+              ))}
+              <input
+                type="number"
+                min="1"
+                placeholder="Custom..."
+                value={customMultiplier}
+                onChange={(e) => {
+                  setCustomMultiplier(e.target.value)
+                  const val = parseInt(e.target.value)
+                  if (!isNaN(val) && val > 0) {
+                    setMultiplier(val)
+                  }
+                }}
+                className={`w-28 px-4 py-2 rounded-xl border transition-all text-sm bg-white dark:bg-white/5 focus:outline-none focus:ring-1 focus:ring-gold ${
+                  customMultiplier ? 'border-gold text-ink dark:text-white' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300'
+                }`}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Info box & Prayer Text */}
         <div className="p-5 bg-amber-50 dark:bg-gold/10 rounded-xl border border-gold/20 space-y-3">
           <p className="font-serif text-lg text-ink dark:text-white leading-relaxed text-center italic">
@@ -131,7 +185,7 @@ export default function DepositPage() {
         <div className="flex justify-between items-center bg-white/50 dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-100 dark:border-white/5">
           <span className="text-sm text-gray-500">{needId ? 'Grace required' : t.credits_earn}</span>
           <span className={`font-serif text-lg font-semibold ${needId ? 'text-red-400' : 'text-gold'}`}>
-            {needId ? '-' : '+'}{selectedType.creditValue} {t.credits}
+            {needId ? '-' : '+'}{totalCredits} {t.credits}
           </span>
         </div>
 
@@ -146,3 +200,4 @@ export default function DepositPage() {
     </div>
   )
 }
+

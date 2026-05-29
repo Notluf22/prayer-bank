@@ -1,17 +1,29 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useLanguage } from '@/lib/LanguageContext'
 import { translations } from '@/lib/translations'
 
 export default function RedeemPage() {
   const { language } = useLanguage()
   const t = translations[language]
-  const [code, setCode] = useState('')
+  const searchParams = useSearchParams()
+  const initialCode = searchParams.get('code') || ''
+  
+  const [code, setCode] = useState(initialCode)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ type: string; credits?: number; prayer?: { type: string; intention: string } } | null>(null)
 
-  async function handleRedeem(e: React.FormEvent) {
-    e.preventDefault()
+  useEffect(() => {
+    if (initialCode) {
+      setCode(initialCode.toUpperCase())
+    }
+  }, [initialCode])
+
+  async function handleRedeem(e?: React.FormEvent) {
+    if (e) e.preventDefault()
+    if (!code.trim()) return
+    
     setLoading(true)
     const res = await fetch('/api/redeem', {
       method: 'POST',
