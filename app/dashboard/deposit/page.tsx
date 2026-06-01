@@ -128,8 +128,8 @@ export default function DepositPage() {
           </div>
         </div>
 
-        {/* Multiplier for Hail Mary */}
-        {selectedType.id === 'hail_mary' && (
+        {/* Multiplier for Prayers */}
+        {['hail_mary', 'our_father', 'divine_mercy', 'holy_rosary'].includes(selectedType.id) && (
           <div className="animate-in fade-in slide-in-from-top-2">
             <label className={`text-xs font-bold uppercase ${trackingClass} text-gray-400 block mb-3`}>How Many Prayers?</label>
             <div className="flex flex-wrap gap-2">
